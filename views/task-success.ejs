@@ -1,62 +1,80 @@
 <%- include('partials/header') %>
 
-    <section class="success-section">
-      <div class="success-message">
-        <span class="success-icon">✅</span>
-        <h1>Task Added Successfully!</h1>
-        <p>Your task has been submitted. Here are the details:</p>
+<div class="container my-5 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      
+      <div class="text-center mb-4">
+        <span class="display-1 text-success mb-2 d-block" aria-hidden="true">✅</span>
+        <h1 class="fw-bold h2 text-success">Task Added Successfully!</h1>
+        <p class="text-muted-custom">Your task has been successfully submitted. Here are the details:</p>
       </div>
 
-      <div class="task-details">
-        <table class="details-table">
-          <tr>
-            <th>Student Name</th>
-            <td><%= task.studentName %></td>
-          </tr>
-          <tr>
-            <th>Email</th>
-            <td><%= task.email %></td>
-          </tr>
-          <tr>
-            <th>Task Title</th>
-            <td><%= task.taskTitle %></td>
-          </tr>
-          <tr>
-            <th>Subject</th>
-            <td><%= task.subject %></td>
-          </tr>
-          <tr>
-            <th>Description</th>
-            <td><%= task.description %></td>
-          </tr>
-          <tr>
-            <th>Deadline</th>
-            <td><%= task.deadline %></td>
-          </tr>
-          <tr>
-            <th>Priority</th>
-            <td>
-              <span class="priority-badge priority-<%= task.priority.toLowerCase() %>">
-                <%= task.priority %>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>Category</th>
-            <td><%= task.category %></td>
-          </tr>
-          <tr>
-            <th>Estimated Hours</th>
-            <td><%= task.estimatedHours %> hour<%= task.estimatedHours !== 1 ? 's' : '' %></td>
-          </tr>
-        </table>
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+              <tbody>
+                <tr>
+                  <th scope="row" class="w-25 border-top-0 ps-4 pt-3">Student Name</th>
+                  <td class="border-top-0 pt-3"><%= task.studentName %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Email</th>
+                  <td><%= task.email %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Task Title</th>
+                  <td class="fw-bold"><%= task.taskTitle %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Subject</th>
+                  <td><%= task.subject %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Description</th>
+                  <td class="text-break"><%= task.description %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Deadline</th>
+                  <td><%= task.deadline %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4 align-middle">Priority</th>
+                  <td>
+                    <% 
+                      let badgeClass = 'bg-secondary';
+                      if (task.priority === 'High') badgeClass = 'bg-danger';
+                      if (task.priority === 'Medium') badgeClass = 'bg-warning text-dark';
+                      if (task.priority === 'Low') badgeClass = 'bg-success';
+                    %>
+                    <span class="badge rounded-pill <%= badgeClass %>">
+                      <%= task.priority %>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4">Category</th>
+                  <td><%= task.category %></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="ps-4 pb-3">Estimated Hours</th>
+                  <td class="pb-3"><%= task.estimatedHours %> hour<%= task.estimatedHours !== 1 ? 's' : '' %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
-      <div class="success-actions">
-        <a href="/tasks/new" class="btn btn-primary">Add Another Task</a>
-        <a href="/tasks" class="btn btn-secondary">View All Tasks</a>
-        <a href="/" class="btn btn-secondary">Return Home</a>
+      <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+        <a href="/tasks/new" class="btn btn-primary px-4 py-2 fw-bold shadow-sm">Add Another Task</a>
+        <a href="/tasks" class="btn btn-outline-primary px-4 py-2 shadow-sm">View All Tasks</a>
+        <a href="/" class="btn btn-outline-secondary px-4 py-2 shadow-sm">Return Home</a>
       </div>
-    </section>
+
+    </div>
+  </div>
+</div>
 
 <%- include('partials/footer') %>

@@ -1,114 +1,153 @@
 <%- include('partials/header') %>
 
-    <section class="form-section">
-      <h1>Add a New Task</h1>
-      <p class="form-subtitle">Fill in the details below to add a study task.</p>
-
-      <form action="/tasks" method="POST" class="task-form" id="taskForm" novalidate>
-        <div class="form-group">
-          <label for="studentName">Student Name</label>
-          <input type="text" id="studentName" name="studentName"
-            placeholder="Enter your name"
-            value="<%= (formData && formData.studentName) ? formData.studentName : '' %>"
-            required minlength="2">
-          <span class="field-error" id="studentNameError"><%= (errors && errors.studentName) ? errors.studentName : '' %></span>
+<div class="container my-5 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      
+      <div class="card shadow-sm border-0 p-4 p-md-5">
+        <div class="mb-4 text-center">
+          <h1 class="fw-bold h2 mb-2">Add a New Task</h1>
+          <p class="text-muted-custom">Fill in the details below to add a study task to your list.</p>
         </div>
 
-        <div class="form-group">
-          <label for="email">Student Email</label>
-          <input type="email" id="email" name="email"
-            placeholder="e.g. student@example.com"
-            value="<%= (formData && formData.email) ? formData.email : '' %>"
-            required>
-          <span class="field-error" id="emailError"><%= (errors && errors.email) ? errors.email : '' %></span>
-        </div>
+        <form action="/tasks" method="POST" id="taskForm" novalidate>
+          <div class="row g-4">
+            
+            <!-- Student Name -->
+            <div class="col-md-6">
+              <label for="studentName" class="form-label fw-bold">Student Name</label>
+              <input type="text" id="studentName" name="studentName"
+                class="form-control <%= (errors && errors.studentName) ? 'field-invalid' : '' %>"
+                placeholder="Enter your name"
+                value="<%= (formData && formData.studentName) ? formData.studentName : '' %>"
+                required minlength="2">
+              <span class="field-error" id="studentNameError"><%= (errors && errors.studentName) ? errors.studentName : '' %></span>
+            </div>
 
-        <div class="form-group">
-          <label for="taskTitle">Task Title</label>
-          <input type="text" id="taskTitle" name="taskTitle"
-            placeholder="e.g. Math Homework Ch. 5"
-            value="<%= (formData && formData.taskTitle) ? formData.taskTitle : '' %>"
-            required minlength="3" maxlength="80">
-          <span class="field-error" id="taskTitleError"><%= (errors && errors.taskTitle) ? errors.taskTitle : '' %></span>
-        </div>
+            <!-- Student Email -->
+            <div class="col-md-6">
+              <label for="email" class="form-label fw-bold">Student Email</label>
+              <input type="email" id="email" name="email"
+                class="form-control <%= (errors && errors.email) ? 'field-invalid' : '' %>"
+                placeholder="e.g. student@example.com"
+                value="<%= (formData && formData.email) ? formData.email : '' %>"
+                required>
+              <span class="field-error" id="emailError"><%= (errors && errors.email) ? errors.email : '' %></span>
+            </div>
 
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" name="subject"
-            placeholder="e.g. Mathematics"
-            value="<%= (formData && formData.subject) ? formData.subject : '' %>"
-            required minlength="2">
-          <span class="field-error" id="subjectError"><%= (errors && errors.subject) ? errors.subject : '' %></span>
-        </div>
+            <!-- Task Title -->
+            <div class="col-md-6">
+              <label for="taskTitle" class="form-label fw-bold">Task Title</label>
+              <input type="text" id="taskTitle" name="taskTitle"
+                class="form-control <%= (errors && errors.taskTitle) ? 'field-invalid' : '' %>"
+                placeholder="e.g. Math Homework Ch. 5"
+                value="<%= (formData && formData.taskTitle) ? formData.taskTitle : '' %>"
+                required minlength="3" maxlength="80">
+              <span class="field-error" id="taskTitleError"><%= (errors && errors.taskTitle) ? errors.taskTitle : '' %></span>
+            </div>
 
-        <div class="form-group">
-          <label for="description">Task Description</label>
-          <textarea id="description" name="description" rows="4"
-            placeholder="Describe the task (10–500 characters)..."
-            required minlength="10" maxlength="500"><%= (formData && formData.description) ? formData.description : '' %></textarea>
-          <div class="form-row">
-            <span class="field-error" id="descriptionError"><%= (errors && errors.description) ? errors.description : '' %></span>
-            <span class="char-counter" id="charCounter">0/500</span>
+            <!-- Subject -->
+            <div class="col-md-6">
+              <label for="subject" class="form-label fw-bold">Subject</label>
+              <input type="text" id="subject" name="subject"
+                class="form-control <%= (errors && errors.subject) ? 'field-invalid' : '' %>"
+                placeholder="e.g. Mathematics"
+                value="<%= (formData && formData.subject) ? formData.subject : '' %>"
+                required minlength="2">
+              <span class="field-error" id="subjectError"><%= (errors && errors.subject) ? errors.subject : '' %></span>
+            </div>
+
+            <!-- Task Description (Full Width) -->
+            <div class="col-12">
+              <label for="description" class="form-label fw-bold">Task Description</label>
+              <textarea id="description" name="description" rows="4"
+                class="form-control <%= (errors && errors.description) ? 'field-invalid' : '' %>"
+                placeholder="Describe the task (10–500 characters)..."
+                required minlength="10" maxlength="500"><%= (formData && formData.description) ? formData.description : '' %></textarea>
+              <div class="d-flex justify-content-between align-items-start mt-1">
+                <span class="field-error mt-0" id="descriptionError"><%= (errors && errors.description) ? errors.description : '' %></span>
+                <span class="char-counter" id="charCounter">0/500</span>
+              </div>
+            </div>
+
+            <!-- Deadline -->
+            <div class="col-md-6">
+              <label for="deadline" class="form-label fw-bold">Deadline</label>
+              <input type="date" id="deadline" name="deadline"
+                class="form-control <%= (errors && errors.deadline) ? 'field-invalid' : '' %>"
+                value="<%= (formData && formData.deadline) ? formData.deadline : '' %>"
+                required>
+              <span class="field-error" id="deadlineError"><%= (errors && errors.deadline) ? errors.deadline : '' %></span>
+            </div>
+
+            <!-- Priority -->
+            <div class="col-md-6">
+              <label for="priority" class="form-label fw-bold">Priority</label>
+              <select id="priority" name="priority" 
+                class="form-select <%= (errors && errors.priority) ? 'field-invalid' : '' %>" required>
+                <option value="" disabled <%= (!formData || !formData.priority) ? 'selected' : '' %>>Select priority</option>
+                <option value="Low" <%= (formData && formData.priority === 'Low') ? 'selected' : '' %>>Low</option>
+                <option value="Medium" <%= (formData && formData.priority === 'Medium') ? 'selected' : '' %>>Medium</option>
+                <option value="High" <%= (formData && formData.priority === 'High') ? 'selected' : '' %>>High</option>
+              </select>
+              <span class="field-error" id="priorityError"><%= (errors && errors.priority) ? errors.priority : '' %></span>
+            </div>
+
+            <!-- Task Category -->
+            <div class="col-md-6">
+              <label for="category" class="form-label fw-bold">Task Category</label>
+              <select id="category" name="category" 
+                class="form-select <%= (errors && errors.category) ? 'field-invalid' : '' %>" required>
+                <option value="" disabled <%= (!formData || !formData.category) ? 'selected' : '' %>>Select category</option>
+                <option value="Assignment" <%= (formData && formData.category === 'Assignment') ? 'selected' : '' %>>Assignment</option>
+                <option value="Exam Preparation" <%= (formData && formData.category === 'Exam Preparation') ? 'selected' : '' %>>Exam Preparation</option>
+                <option value="Project" <%= (formData && formData.category === 'Project') ? 'selected' : '' %>>Project</option>
+                <option value="Revision" <%= (formData && formData.category === 'Revision') ? 'selected' : '' %>>Revision</option>
+                <option value="Other" <%= (formData && formData.category === 'Other') ? 'selected' : '' %>>Other</option>
+              </select>
+              <span class="field-error" id="categoryError"><%= (errors && errors.category) ? errors.category : '' %></span>
+            </div>
+
+            <!-- Estimated Hours -->
+            <div class="col-md-6">
+              <label for="estimatedHours" class="form-label fw-bold">Estimated Study Hours</label>
+              <input type="number" id="estimatedHours" name="estimatedHours"
+                class="form-control <%= (errors && errors.estimatedHours) ? 'field-invalid' : '' %>"
+                placeholder="e.g. 3"
+                value="<%= (formData && formData.estimatedHours) ? formData.estimatedHours : '' %>"
+                required min="1" max="100">
+              <span class="field-error" id="estimatedHoursError"><%= (errors && errors.estimatedHours) ? errors.estimatedHours : '' %></span>
+            </div>
+
+            <!-- Confirmation Checkbox (Full Width) -->
+            <div class="col-12 mt-4">
+              <div class="form-check">
+                <input class="form-check-input <%= (errors && errors.confirmation) ? 'field-invalid' : '' %>" 
+                  type="checkbox" id="confirmation" name="confirmation" value="yes"
+                  <%= (formData && formData.confirmation) ? 'checked' : '' %>>
+                <label class="form-check-label text-muted-custom" for="confirmation">
+                  I confirm that the provided task information is correct.
+                </label>
+              </div>
+              <span class="field-error mt-1" id="confirmationError"><%= (errors && errors.confirmation) ? errors.confirmation : '' %></span>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="col-12 mt-4">
+              <div class="d-flex flex-column flex-md-row gap-3">
+                <button type="submit" id="submitBtn" class="btn btn-primary flex-grow-1 py-2 fw-bold">Submit Task</button>
+                <button type="reset" id="resetBtn" class="btn btn-secondary flex-grow-1 py-2 fw-bold">Reset Form</button>
+              </div>
+            </div>
+
           </div>
-        </div>
+        </form>
 
-        <div class="form-group">
-          <label for="deadline">Deadline</label>
-          <input type="date" id="deadline" name="deadline"
-            value="<%= (formData && formData.deadline) ? formData.deadline : '' %>"
-            required>
-          <span class="field-error" id="deadlineError"><%= (errors && errors.deadline) ? errors.deadline : '' %></span>
-        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="form-group">
-          <label for="priority">Priority</label>
-          <select id="priority" name="priority" required>
-            <option value="" disabled <%= (!formData || !formData.priority) ? 'selected' : '' %>>Select priority</option>
-            <option value="Low" <%= (formData && formData.priority === 'Low') ? 'selected' : '' %>>Low</option>
-            <option value="Medium" <%= (formData && formData.priority === 'Medium') ? 'selected' : '' %>>Medium</option>
-            <option value="High" <%= (formData && formData.priority === 'High') ? 'selected' : '' %>>High</option>
-          </select>
-          <span class="field-error" id="priorityError"><%= (errors && errors.priority) ? errors.priority : '' %></span>
-        </div>
-
-        <div class="form-group">
-          <label for="category">Task Category</label>
-          <select id="category" name="category" required>
-            <option value="" disabled <%= (!formData || !formData.category) ? 'selected' : '' %>>Select category</option>
-            <option value="Assignment" <%= (formData && formData.category === 'Assignment') ? 'selected' : '' %>>Assignment</option>
-            <option value="Exam Preparation" <%= (formData && formData.category === 'Exam Preparation') ? 'selected' : '' %>>Exam Preparation</option>
-            <option value="Project" <%= (formData && formData.category === 'Project') ? 'selected' : '' %>>Project</option>
-            <option value="Revision" <%= (formData && formData.category === 'Revision') ? 'selected' : '' %>>Revision</option>
-            <option value="Other" <%= (formData && formData.category === 'Other') ? 'selected' : '' %>>Other</option>
-          </select>
-          <span class="field-error" id="categoryError"><%= (errors && errors.category) ? errors.category : '' %></span>
-        </div>
-
-        <div class="form-group">
-          <label for="estimatedHours">Estimated Study Hours</label>
-          <input type="number" id="estimatedHours" name="estimatedHours"
-            placeholder="e.g. 3"
-            value="<%= (formData && formData.estimatedHours) ? formData.estimatedHours : '' %>"
-            required min="1" max="100">
-          <span class="field-error" id="estimatedHoursError"><%= (errors && errors.estimatedHours) ? errors.estimatedHours : '' %></span>
-        </div>
-
-        <div class="form-group form-group-checkbox">
-          <label class="checkbox-label">
-            <input type="checkbox" id="confirmation" name="confirmation" value="yes"
-              <%= (formData && formData.confirmation) ? 'checked' : '' %>>
-            <span>I confirm that the provided task information is correct.</span>
-          </label>
-          <span class="field-error" id="confirmationError"><%= (errors && errors.confirmation) ? errors.confirmation : '' %></span>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" id="submitBtn" class="btn btn-primary">Submit Task</button>
-          <button type="reset" id="resetBtn" class="btn btn-secondary">Reset Form</button>
-        </div>
-      </form>
-    </section>
-
-    <script src="/js/validation.js"></script>
+<script src="/js/validation.js"></script>
 
 <%- include('partials/footer') %>

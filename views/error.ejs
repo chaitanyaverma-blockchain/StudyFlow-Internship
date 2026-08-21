@@ -1,13 +1,15 @@
 <%- include('partials/header') %>
 
-    <section class="error-page">
-      <div class="error-content">
-        <span class="error-icon">⚠️</span>
-        <h1>Oops!</h1>
-        <h2>Something Went Wrong</h2>
-        <p><%= message %></p>
-        <a href="/" class="btn btn-primary">Go Back Home</a>
-      </div>
-    </section>
+<div class="container my-5 text-center animate-fade-in d-flex flex-column justify-content-center align-items-center" style="min-height: 50vh;">
+  <div class="card border-0 shadow-sm p-5 border-top border-danger border-5" style="max-width: 600px; width: 100%;">
+    <span class="display-1 d-block mb-3" aria-hidden="true">⚠️</span>
+    <h1 class="display-5 fw-bold text-danger mb-3"><%= title %></h1>
+    <h2 class="h5 text-muted-custom mb-4"><%= message %></h2>
+    <p class="mb-4">We've encountered an unexpected issue. Please try again later or return to the homepage.</p>
+    <div>
+      <a href="/" class="btn btn-secondary px-4 py-2 fw-bold">Return Home</a>
+    </div>
+  </div>
+</div>
 
 <%- include('partials/footer') %>

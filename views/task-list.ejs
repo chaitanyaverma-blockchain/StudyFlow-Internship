@@ -1,46 +1,88 @@
 <%- include('partials/header') %>
 
-    <section class="task-list-section">
-      <div class="task-list-header">
-        <h1>All Tasks</h1>
-        <p class="task-count">Total tasks: <strong><%= tasks.length %></strong></p>
+<div class="container my-5 animate-fade-in">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold mb-3 mb-md-0">My Tasks</h1>
+    <a href="/tasks/new" class="btn btn-primary shadow-sm">
+      <span aria-hidden="true">+</span> Add New Task
+    </a>
+  </div>
+
+  <!-- Summary Statistics Cards -->
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="card h-100 text-center border-0 shadow-sm p-3">
+        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Total Tasks</h5>
+        <p class="display-6 fw-bold text-primary mb-0"><%= stats.total %></p>
       </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card h-100 text-center border-0 shadow-sm p-3">
+        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">High Priority</h5>
+        <p class="display-6 fw-bold text-danger mb-0"><%= stats.highPriority %></p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card h-100 text-center border-0 shadow-sm p-3">
+        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Upcoming</h5>
+        <p class="display-6 fw-bold text-warning mb-0"><%= stats.upcoming %></p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card h-100 text-center border-0 shadow-sm p-3">
+        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Completed</h5>
+        <p class="display-6 fw-bold text-success mb-0"><%= stats.completed %></p>
+      </div>
+    </div>
+  </div>
 
-      <% if (tasks.length === 0) { %>
-        <div class="empty-state">
-          <span class="empty-icon">📋</span>
-          <h2>No Tasks Yet</h2>
-          <p>You haven't added any tasks. Start by creating your first study task!</p>
-          <a href="/tasks/new" class="btn btn-primary">Add Your First Task</a>
-        </div>
-      <% } else { %>
-        <div class="task-cards">
-          <% tasks.forEach(function(task) { %>
-            <div class="task-card">
-              <div class="task-card-header">
-                <h3><%= task.taskTitle %></h3>
-                <span class="priority-badge priority-<%= task.priority.toLowerCase() %>"><%= task.priority %></span>
-              </div>
-              <div class="task-card-body">
-                <p><strong>Student:</strong> <%= task.studentName %></p>
-                <p><strong>Subject:</strong> <%= task.subject %></p>
-                <p><strong>Category:</strong> <%= task.category %></p>
-                <p><strong>Deadline:</strong> <%= task.deadline %></p>
-                <p><strong>Est. Hours:</strong> <%= task.estimatedHours %></p>
-                <p><strong>Status:</strong>
-                  <span class="status-badge status-<%= task.completed ? 'complete' : 'pending' %>">
-                    <%= task.completed ? 'Completed' : 'Pending' %>
-                  </span>
-                </p>
-              </div>
+  <% if (tasks.length === 0) { %>
+    <div class="card border-0 shadow-sm text-center py-5 px-3">
+      <div class="card-body">
+        <span class="display-1 text-muted opacity-50 mb-3 d-block">📋</span>
+        <h2 class="h4 fw-bold">No Tasks Yet</h2>
+        <p class="text-muted-custom mb-4">You haven't added any tasks. Start by creating your first study task!</p>
+        <a href="/tasks/new" class="btn btn-primary px-4 py-2">Add Your First Task</a>
+      </div>
+    </div>
+  <% } else { %>
+    <!-- Task Cards Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% tasks.forEach(function(task) { %>
+        <div class="col">
+          <div class="card h-100 card-hover">
+            <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-start">
+              <h3 class="h5 fw-bold mb-0 text-truncate pe-2" title="<%= task.taskTitle %>"><%= task.taskTitle %></h3>
+              
+              <% 
+                let badgeClass = 'bg-secondary';
+                if (task.priority === 'High') badgeClass = 'bg-danger';
+                if (task.priority === 'Medium') badgeClass = 'bg-warning text-dark';
+                if (task.priority === 'Low') badgeClass = 'bg-success';
+              %>
+              <span class="badge rounded-pill <%= badgeClass %>" aria-label="Priority: <%= task.priority %>"><%= task.priority %></span>
             </div>
-          <% }); %>
+            
+            <div class="card-body">
+              <ul class="list-unstyled mb-0 small text-muted-custom">
+                <li class="mb-2"><strong><span aria-hidden="true">👤</span> Student:</strong> <%= task.studentName %></li>
+                <li class="mb-2"><strong><span aria-hidden="true">📚</span> Subject:</strong> <%= task.subject %></li>
+                <li class="mb-2"><strong><span aria-hidden="true">🏷️</span> Category:</strong> <%= task.category %></li>
+                <li class="mb-2"><strong><span aria-hidden="true">⏰</span> Deadline:</strong> <%= task.deadline %></li>
+                <li class="mb-2"><strong><span aria-hidden="true">⏳</span> Est. Hours:</strong> <%= task.estimatedHours %></li>
+              </ul>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0 pb-3 pt-0">
+              <span class="status-badge status-<%= task.completed ? 'complete' : 'pending' %>">
+                <%= task.completed ? 'Completed' : 'Pending' %>
+              </span>
+            </div>
+          </div>
         </div>
-
-        <div class="task-list-actions">
-          <a href="/tasks/new" class="btn btn-primary">Add New Task</a>
-        </div>
-      <% } %>
-    </section>
+      <% }); %>
+    </div>
+  <% } %>
+</div>
 
 <%- include('partials/footer') %>

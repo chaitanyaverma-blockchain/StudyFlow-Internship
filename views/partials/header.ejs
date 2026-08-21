@@ -5,19 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="StudyFlow – A student task manager to organize studies, manage assignments, and track deadlines.">
   <title>StudyFlow – <%= title %></title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="/" class="logo">📚 StudyFlow</a>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/tasks/new">Add Task</a></li>
-          <li><a href="/tasks">View Tasks</a></li>
-          <li><a href="/about">About</a></li>
-        </ul>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="/">📚 StudyFlow</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link <%= title === 'Home' ? 'active' : '' %>" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= title === 'Add Task' ? 'active' : '' %>" href="/tasks/new">Add Task</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= title === 'All Tasks' ? 'active' : '' %>" href="/tasks">View Tasks</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= title === 'About' ? 'active' : '' %>" href="/about">About</a>
+            </li>
+            <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+              <button id="themeToggle" class="btn btn-sm btn-outline-secondary rounded-circle" aria-label="Toggle Dark Mode">
+                <span id="themeIcon">🌙</span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   </header>

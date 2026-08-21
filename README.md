@@ -216,15 +216,31 @@ The server will start at **http://localhost:3000**.
 - [ ] Task list shows empty state when no tasks exist
 - [ ] Mobile layout works at approximately 375px
 
+### Task 3 Tests – Responsive Design & UI
+
+- [ ] Bootstrap 5 is successfully integrated and styles are active
+- [ ] Navbar includes a functioning hamburger menu on mobile (approx. 375px)
+- [ ] Homepage displays Hero, Features, How It Works, and Call-to-action sections
+- [ ] Task list page `/tasks` displays summary cards (Total, High Priority, Upcoming, Completed)
+- [ ] Tasks are displayed in a responsive Bootstrap card grid
+- [ ] Priority badges use the correct colors (High=red, Medium=yellow/orange, Low=green)
+- [ ] Add Task form uses a two-column responsive layout (single column on mobile)
+- [ ] About page displays multiple sections (timeline/cards)
+- [ ] CSS animations (e.g., fade-in, hover effects) are smooth and not distracting
+- [ ] Dark Mode toggle works and saves preference in `localStorage`
+- [ ] Accessibility: Sufficient contrast and `prefers-reduced-motion` support
+- [ ] Previous Task 1 and 2 features (like validation and temporary storage) still function perfectly
+
 ## Future Development
 
 This project will be extended progressively across the remaining internship tasks:
 
 - ~~**Task 1** – HTML structure and basic server interaction~~
 - ~~**Task 2** – Validation, interaction, and temporary storage~~
-- **Task 3** – MongoDB integration for persistent data storage
-- **Task 4** – REST API development
-- **Task 5** – React frontend integration
-- **Task 6** – Authentication and deployment
+- ~~**Task 3** – Advanced CSS styling and responsive design (Bootstrap)~~
+- **Task 4** – MongoDB integration for persistent data storage (Previously Task 3, pushed back)
+- **Task 5** – REST API development
+- **Task 6** – React frontend integration
+- **Task 7** – Authentication and deployment
 
-> **Note:** No database, authentication, or frontend framework has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 3.
+> **Note:** No database, authentication, or frontend framework has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 4.

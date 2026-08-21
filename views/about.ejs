@@ -1,25 +1,112 @@
 <%- include('partials/header') %>
 
-    <section class="about-section">
-      <h1>About StudyFlow</h1>
+<div class="hero text-center mb-5 py-5" style="border-radius: 0 0 20px 20px;">
+  <div class="container hero-content animate-fade-in">
+    <h1 class="display-5 fw-bold mb-3">About StudyFlow</h1>
+    <p class="lead mb-0">Learn about our mission to help students succeed.</p>
+  </div>
+</div>
 
-      <div class="about-content">
-        <div class="about-card">
-          <h2>What is StudyFlow?</h2>
-          <p>StudyFlow is a student task management application designed to help students organize their academic workload. It allows you to add study tasks, set deadlines, assign priorities, and keep track of everything you need to get done — all from a simple, easy-to-use interface.</p>
-        </div>
+<div class="container mb-5 animate-fade-in" style="animation-delay: 0.1s;">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      
+      <!-- What is StudyFlow? -->
+      <div class="card border-0 shadow-sm mb-5 p-4 p-md-5 card-hover">
+        <h2 class="h3 fw-bold mb-3 text-primary border-bottom pb-2">What is StudyFlow?</h2>
+        <p class="text-muted-custom">
+          StudyFlow is a dedicated student productivity application designed to help learners organize their academic life. 
+          By providing a centralized platform for managing assignments, tracking deadlines, and prioritizing coursework, 
+          StudyFlow aims to reduce student stress and improve academic performance.
+        </p>
+      </div>
 
-        <div class="about-card">
-          <h2>Why Use StudyFlow?</h2>
-          <p>As a student, juggling multiple subjects, assignments, and deadlines can be overwhelming. StudyFlow gives you a central place to plan your study schedule, so you can focus on what matters most — learning. Whether you have one assignment or twenty, StudyFlow keeps you organized.</p>
-        </div>
-
-        <div class="about-card">
-          <h2>About This Project</h2>
-          <p>StudyFlow is being developed as part of a <strong>Full Stack Development Internship</strong>. The project is built progressively across multiple tasks, starting from basic HTML structure and server-side rendering, and eventually growing into a full-featured web application with user authentication, database storage, and a modern frontend.</p>
-          <p>This is <strong>Task 1</strong>, which focuses on setting up the project structure, creating EJS templates, and handling basic form submission with Express.js.</p>
+      <!-- Why use StudyFlow? -->
+      <div class="card border-0 shadow-sm mb-5 p-4 p-md-5 card-hover">
+        <h2 class="h3 fw-bold mb-4 text-primary border-bottom pb-2">Why use StudyFlow?</h2>
+        <div class="row g-4">
+          <div class="col-md-6 d-flex">
+            <div class="me-3 fs-3 text-primary">🎯</div>
+            <div>
+              <h3 class="h6 fw-bold">Focus on what matters</h3>
+              <p class="text-muted-custom small mb-0">Our priority system helps you tackle the most important assignments first.</p>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="me-3 fs-3 text-primary">🧠</div>
+            <div>
+              <h3 class="h6 fw-bold">Reduce cognitive load</h3>
+              <p class="text-muted-custom small mb-0">Stop trying to remember every deadline and let StudyFlow do the remembering for you.</p>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+
+      <!-- Project Development Journey -->
+      <h2 class="h3 fw-bold mb-4 text-center mt-5">Project Development Journey</h2>
+      
+      <div class="row g-4 mb-5 position-relative">
+        
+        <!-- Task 1 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100 card-hover p-4 position-relative z-1">
+            <div class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success px-3 py-2 border border-white border-2">Task 1</div>
+            <h3 class="h5 fw-bold text-center mt-3 text-success">Foundation</h3>
+            <ul class="text-muted-custom small mt-3 ps-3">
+              <li>Node.js & Express server</li>
+              <li>EJS templates & partials</li>
+              <li>Basic routing</li>
+              <li>HTML forms</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100 card-hover p-4 position-relative z-1">
+            <div class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success px-3 py-2 border border-white border-2">Task 2</div>
+            <h3 class="h5 fw-bold text-center mt-3 text-success">Validation & Data</h3>
+            <ul class="text-muted-custom small mt-3 ps-3">
+              <li>Client-side JS validation</li>
+              <li>Server-side validation</li>
+              <li>Live character counter</li>
+              <li>Temporary in-memory storage</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Task 3 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100 card-hover p-4 position-relative z-1 border border-primary">
+            <div class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary px-3 py-2 border border-white border-2">Task 3</div>
+            <h3 class="h5 fw-bold text-center mt-3 text-primary">Responsive Design</h3>
+            <ul class="text-muted-custom small mt-3 ps-3 mb-0">
+              <li>Bootstrap 5 integration</li>
+              <li>Responsive grids & navbar</li>
+              <li>Advanced CSS animations</li>
+              <li>Dark mode toggling</li>
+            </ul>
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Technologies Used -->
+      <div class="card border-0 shadow-sm p-4 p-md-5 card-hover text-center bg-light" style="background-color: var(--secondary-color) !important;">
+        <h2 class="h4 fw-bold mb-4">Technologies Used</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <span class="badge bg-dark px-3 py-2 fs-6">Node.js</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">Express.js</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">EJS</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">Bootstrap 5</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">HTML5</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">CSS3</span>
+          <span class="badge bg-dark px-3 py-2 fs-6">Vanilla JS</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <%- include('partials/footer') %>

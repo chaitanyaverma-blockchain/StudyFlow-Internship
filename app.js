@@ -38,9 +38,30 @@ app.get('/tasks/new', (req, res) => {
 
 // Task list page
 app.get('/tasks', (req, res) => {
+  // Calculate summary stats
+  const totalTasks = tasks.length;
+  const highPriority = tasks.filter(t => t.priority === 'High').length;
+  
+  // Upcoming = not past deadline (simplified for this task)
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const upcoming = tasks.filter(t => {
+    if (t.completed) return false;
+    const deadlineDate = new Date(t.deadline + 'T00:00:00');
+    return deadlineDate >= today;
+  }).length;
+  
+  const completed = tasks.filter(t => t.completed).length;
+
   res.render('task-list', {
     title: 'All Tasks',
-    tasks: tasks
+    tasks: tasks,
+    stats: {
+      total: totalTasks,
+      highPriority: highPriority,
+      upcoming: upcoming,
+      completed: completed
+    }
   });
 });
 
