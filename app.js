@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const validateTask = require('./middleware/taskValidation');
 
 const app = express();
 const PORT = 3000;
@@ -14,6 +15,11 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ──── In-Memory Task Storage ────
+// Tasks are stored here temporarily. Data is lost when the server restarts.
+const tasks = [];
+let nextId = 1;
+
 // ──── Routes ────
 
 // Home page
@@ -23,24 +29,57 @@ app.get('/', (req, res) => {
 
 // Add Task page
 app.get('/tasks/new', (req, res) => {
-  res.render('add-task', { title: 'Add Task' });
+  res.render('add-task', {
+    title: 'Add Task',
+    errors: {},
+    formData: {}
+  });
 });
 
-// Handle task form submission
-app.post('/tasks', (req, res) => {
-  const { studentName, taskTitle, subject, description, deadline, priority } = req.body;
+// Task list page
+app.get('/tasks', (req, res) => {
+  res.render('task-list', {
+    title: 'All Tasks',
+    tasks: tasks
+  });
+});
 
-  // Pass submitted data to the success page
+// Handle task form submission with server-side validation
+app.post('/tasks', validateTask, (req, res) => {
+  const errors = req.validationErrors;
+  const data = req.taskData;
+
+  // If validation fails, re-render the form with errors and previous values
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).render('add-task', {
+      title: 'Add Task',
+      errors: errors,
+      formData: data
+    });
+  }
+
+  // Create the task object and store it
+  const newTask = {
+    id: nextId++,
+    studentName: data.studentName,
+    email: data.email,
+    taskTitle: data.taskTitle,
+    subject: data.subject,
+    description: data.description,
+    deadline: data.deadline,
+    priority: data.priority,
+    category: data.category,
+    estimatedHours: data.estimatedHours,
+    completed: false,
+    createdAt: new Date()
+  };
+
+  tasks.push(newTask);
+
+  // Render the success page with the stored task
   res.render('task-success', {
     title: 'Task Added',
-    task: {
-      studentName,
-      taskTitle,
-      subject,
-      description,
-      deadline,
-      priority
-    }
+    task: newTask
   });
 });
 

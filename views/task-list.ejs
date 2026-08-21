@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+    <section class="task-list-section">
+      <div class="task-list-header">
+        <h1>All Tasks</h1>
+        <p class="task-count">Total tasks: <strong><%= tasks.length %></strong></p>
+      </div>
+
+      <% if (tasks.length === 0) { %>
+        <div class="empty-state">
+          <span class="empty-icon">📋</span>
+          <h2>No Tasks Yet</h2>
+          <p>You haven't added any tasks. Start by creating your first study task!</p>
+          <a href="/tasks/new" class="btn btn-primary">Add Your First Task</a>
+        </div>
+      <% } else { %>
+        <div class="task-cards">
+          <% tasks.forEach(function(task) { %>
+            <div class="task-card">
+              <div class="task-card-header">
+                <h3><%= task.taskTitle %></h3>
+                <span class="priority-badge priority-<%= task.priority.toLowerCase() %>"><%= task.priority %></span>
+              </div>
+              <div class="task-card-body">
+                <p><strong>Student:</strong> <%= task.studentName %></p>
+                <p><strong>Subject:</strong> <%= task.subject %></p>
+                <p><strong>Category:</strong> <%= task.category %></p>
+                <p><strong>Deadline:</strong> <%= task.deadline %></p>
+                <p><strong>Est. Hours:</strong> <%= task.estimatedHours %></p>
+                <p><strong>Status:</strong>
+                  <span class="status-badge status-<%= task.completed ? 'complete' : 'pending' %>">
+                    <%= task.completed ? 'Completed' : 'Pending' %>
+                  </span>
+                </p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+
+        <div class="task-list-actions">
+          <a href="/tasks/new" class="btn btn-primary">Add New Task</a>
+        </div>
+      <% } %>
+    </section>
+
+<%- include('partials/footer') %>

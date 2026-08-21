@@ -4,44 +4,111 @@
       <h1>Add a New Task</h1>
       <p class="form-subtitle">Fill in the details below to add a study task.</p>
 
-      <form action="/tasks" method="POST" class="task-form">
+      <form action="/tasks" method="POST" class="task-form" id="taskForm" novalidate>
         <div class="form-group">
           <label for="studentName">Student Name</label>
-          <input type="text" id="studentName" name="studentName" placeholder="Enter your name" required>
+          <input type="text" id="studentName" name="studentName"
+            placeholder="Enter your name"
+            value="<%= (formData && formData.studentName) ? formData.studentName : '' %>"
+            required minlength="2">
+          <span class="field-error" id="studentNameError"><%= (errors && errors.studentName) ? errors.studentName : '' %></span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Student Email</label>
+          <input type="email" id="email" name="email"
+            placeholder="e.g. student@example.com"
+            value="<%= (formData && formData.email) ? formData.email : '' %>"
+            required>
+          <span class="field-error" id="emailError"><%= (errors && errors.email) ? errors.email : '' %></span>
         </div>
 
         <div class="form-group">
           <label for="taskTitle">Task Title</label>
-          <input type="text" id="taskTitle" name="taskTitle" placeholder="e.g. Math Homework Ch. 5" required>
+          <input type="text" id="taskTitle" name="taskTitle"
+            placeholder="e.g. Math Homework Ch. 5"
+            value="<%= (formData && formData.taskTitle) ? formData.taskTitle : '' %>"
+            required minlength="3" maxlength="80">
+          <span class="field-error" id="taskTitleError"><%= (errors && errors.taskTitle) ? errors.taskTitle : '' %></span>
         </div>
 
         <div class="form-group">
           <label for="subject">Subject</label>
-          <input type="text" id="subject" name="subject" placeholder="e.g. Mathematics" required>
+          <input type="text" id="subject" name="subject"
+            placeholder="e.g. Mathematics"
+            value="<%= (formData && formData.subject) ? formData.subject : '' %>"
+            required minlength="2">
+          <span class="field-error" id="subjectError"><%= (errors && errors.subject) ? errors.subject : '' %></span>
         </div>
 
         <div class="form-group">
           <label for="description">Task Description</label>
-          <textarea id="description" name="description" rows="4" placeholder="Describe the task..." required></textarea>
+          <textarea id="description" name="description" rows="4"
+            placeholder="Describe the task (10–500 characters)..."
+            required minlength="10" maxlength="500"><%= (formData && formData.description) ? formData.description : '' %></textarea>
+          <div class="form-row">
+            <span class="field-error" id="descriptionError"><%= (errors && errors.description) ? errors.description : '' %></span>
+            <span class="char-counter" id="charCounter">0/500</span>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="deadline">Deadline</label>
-          <input type="date" id="deadline" name="deadline" required>
+          <input type="date" id="deadline" name="deadline"
+            value="<%= (formData && formData.deadline) ? formData.deadline : '' %>"
+            required>
+          <span class="field-error" id="deadlineError"><%= (errors && errors.deadline) ? errors.deadline : '' %></span>
         </div>
 
         <div class="form-group">
           <label for="priority">Priority</label>
           <select id="priority" name="priority" required>
-            <option value="" disabled selected>Select priority</option>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
+            <option value="" disabled <%= (!formData || !formData.priority) ? 'selected' : '' %>>Select priority</option>
+            <option value="Low" <%= (formData && formData.priority === 'Low') ? 'selected' : '' %>>Low</option>
+            <option value="Medium" <%= (formData && formData.priority === 'Medium') ? 'selected' : '' %>>Medium</option>
+            <option value="High" <%= (formData && formData.priority === 'High') ? 'selected' : '' %>>High</option>
           </select>
+          <span class="field-error" id="priorityError"><%= (errors && errors.priority) ? errors.priority : '' %></span>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit Task</button>
+        <div class="form-group">
+          <label for="category">Task Category</label>
+          <select id="category" name="category" required>
+            <option value="" disabled <%= (!formData || !formData.category) ? 'selected' : '' %>>Select category</option>
+            <option value="Assignment" <%= (formData && formData.category === 'Assignment') ? 'selected' : '' %>>Assignment</option>
+            <option value="Exam Preparation" <%= (formData && formData.category === 'Exam Preparation') ? 'selected' : '' %>>Exam Preparation</option>
+            <option value="Project" <%= (formData && formData.category === 'Project') ? 'selected' : '' %>>Project</option>
+            <option value="Revision" <%= (formData && formData.category === 'Revision') ? 'selected' : '' %>>Revision</option>
+            <option value="Other" <%= (formData && formData.category === 'Other') ? 'selected' : '' %>>Other</option>
+          </select>
+          <span class="field-error" id="categoryError"><%= (errors && errors.category) ? errors.category : '' %></span>
+        </div>
+
+        <div class="form-group">
+          <label for="estimatedHours">Estimated Study Hours</label>
+          <input type="number" id="estimatedHours" name="estimatedHours"
+            placeholder="e.g. 3"
+            value="<%= (formData && formData.estimatedHours) ? formData.estimatedHours : '' %>"
+            required min="1" max="100">
+          <span class="field-error" id="estimatedHoursError"><%= (errors && errors.estimatedHours) ? errors.estimatedHours : '' %></span>
+        </div>
+
+        <div class="form-group form-group-checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="confirmation" name="confirmation" value="yes"
+              <%= (formData && formData.confirmation) ? 'checked' : '' %>>
+            <span>I confirm that the provided task information is correct.</span>
+          </label>
+          <span class="field-error" id="confirmationError"><%= (errors && errors.confirmation) ? errors.confirmation : '' %></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn" class="btn btn-primary">Submit Task</button>
+          <button type="reset" id="resetBtn" class="btn btn-secondary">Reset Form</button>
+        </div>
       </form>
     </section>
+
+    <script src="/js/validation.js"></script>
 
 <%- include('partials/footer') %>
