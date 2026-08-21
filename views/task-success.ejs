@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+    <section class="success-section">
+      <div class="success-message">
+        <span class="success-icon">✅</span>
+        <h1>Task Added Successfully!</h1>
+        <p>Your task has been submitted. Here are the details:</p>
+      </div>
+
+      <div class="task-details">
+        <table class="details-table">
+          <tr>
+            <th>Student Name</th>
+            <td><%= task.studentName %></td>
+          </tr>
+          <tr>
+            <th>Task Title</th>
+            <td><%= task.taskTitle %></td>
+          </tr>
+          <tr>
+            <th>Subject</th>
+            <td><%= task.subject %></td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td><%= task.description %></td>
+          </tr>
+          <tr>
+            <th>Deadline</th>
+            <td><%= task.deadline %></td>
+          </tr>
+          <tr>
+            <th>Priority</th>
+            <td>
+              <span class="priority-badge priority-<%= task.priority.toLowerCase() %>">
+                <%= task.priority %>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="success-actions">
+        <a href="/tasks/new" class="btn btn-primary">Add Another Task</a>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+      </div>
+    </section>
+
+<%- include('partials/footer') %>
