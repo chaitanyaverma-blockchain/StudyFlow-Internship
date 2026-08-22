@@ -7,7 +7,7 @@
       <div class="card shadow-sm border-0 p-4 p-md-5">
         <div class="mb-4 text-center">
           <h1 class="fw-bold h2 mb-2">Add a New Task</h1>
-          <p class="text-muted-custom">Fill in the details below to add a study task to your list.</p>
+          <p class="text-theme-secondary">Fill in the details below to add a study task to your list.</p>
         </div>
 
         <form action="/tasks" method="POST" id="taskForm" novalidate>
@@ -125,7 +125,7 @@
                 <input class="form-check-input <%= (errors && errors.confirmation) ? 'field-invalid' : '' %>" 
                   type="checkbox" id="confirmation" name="confirmation" value="yes"
                   <%= (formData && formData.confirmation) ? 'checked' : '' %>>
-                <label class="form-check-label text-muted-custom" for="confirmation">
+                <label class="form-check-label text-theme-secondary" for="confirmation">
                   I confirm that the provided task information is correct.
                 </label>
               </div>

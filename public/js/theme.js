@@ -1,37 +1,49 @@
 // Dark Mode Toggling Logic
+// Applied as early as possible to avoid flash of wrong theme
 
 (function() {
-  const themeToggleBtn = document.getElementById('themeToggle');
-  const body = document.body;
-  const icon = document.getElementById('themeIcon');
+  // Apply saved theme immediately (this runs in <head> via inline script too)
+  var savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.body && document.body.setAttribute('data-theme', 'dark');
+  }
 
-  // Check for saved theme preference in localStorage
-  const currentTheme = localStorage.getItem('theme');
-  if (currentTheme) {
+  // Wait for DOM to set up toggle button
+  document.addEventListener('DOMContentLoaded', function() {
+    var themeToggleBtn = document.getElementById('themeToggle');
+    var icon = document.getElementById('themeIcon');
+    var body = document.body;
+
+    // Apply saved theme to body (in case inline script only got <html>)
+    var currentTheme = localStorage.getItem('theme') || 'light';
     body.setAttribute('data-theme', currentTheme);
     updateIcon(currentTheme);
-  }
+    updateAriaLabel(currentTheme);
 
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', function() {
-      // Toggle theme
-      let newTheme = 'light';
-      if (body.getAttribute('data-theme') !== 'dark') {
-        newTheme = 'dark';
-      }
-      
-      body.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateIcon(newTheme);
-    });
-  }
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function() {
+        var current = body.getAttribute('data-theme');
+        var newTheme = (current === 'dark') ? 'light' : 'dark';
 
-  function updateIcon(theme) {
-    if (!icon) return;
-    if (theme === 'dark') {
-      icon.textContent = '☀️'; // Sun for light mode
-    } else {
-      icon.textContent = '🌙'; // Moon for dark mode
+        body.setAttribute('data-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+        updateAriaLabel(newTheme);
+      });
     }
-  }
+
+    function updateIcon(theme) {
+      if (!icon) return;
+      icon.textContent = (theme === 'dark') ? '☀️' : '🌙';
+    }
+
+    function updateAriaLabel(theme) {
+      if (!themeToggleBtn) return;
+      themeToggleBtn.setAttribute('aria-label',
+        (theme === 'dark') ? 'Switch to light mode' : 'Switch to dark mode'
+      );
+    }
+  });
 })();

@@ -12,25 +12,25 @@
   <div class="row g-3 mb-5">
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
-        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Total Tasks</h5>
+        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Total Tasks</h5>
         <p class="display-6 fw-bold text-primary mb-0"><%= stats.total %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
-        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">High Priority</h5>
+        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">High Priority</h5>
         <p class="display-6 fw-bold text-danger mb-0"><%= stats.highPriority %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
-        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Upcoming</h5>
+        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Upcoming</h5>
         <p class="display-6 fw-bold text-warning mb-0"><%= stats.upcoming %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
-        <h5 class="card-title text-muted-custom small text-uppercase fw-bold mb-2">Completed</h5>
+        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Completed</h5>
         <p class="display-6 fw-bold text-success mb-0"><%= stats.completed %></p>
       </div>
     </div>
@@ -41,7 +41,7 @@
       <div class="card-body">
         <span class="display-1 text-muted opacity-50 mb-3 d-block">📋</span>
         <h2 class="h4 fw-bold">No Tasks Yet</h2>
-        <p class="text-muted-custom mb-4">You haven't added any tasks. Start by creating your first study task!</p>
+        <p class="text-theme-secondary mb-4">You haven't added any tasks. Start by creating your first study task!</p>
         <a href="/tasks/new" class="btn btn-primary px-4 py-2">Add Your First Task</a>
       </div>
     </div>
@@ -64,7 +64,7 @@
             </div>
             
             <div class="card-body">
-              <ul class="list-unstyled mb-0 small text-muted-custom">
+              <ul class="list-unstyled mb-0 small text-theme-secondary">
                 <li class="mb-2"><strong><span aria-hidden="true">👤</span> Student:</strong> <%= task.studentName %></li>
                 <li class="mb-2"><strong><span aria-hidden="true">📚</span> Subject:</strong> <%= task.subject %></li>
                 <li class="mb-2"><strong><span aria-hidden="true">🏷️</span> Category:</strong> <%= task.category %></li>
