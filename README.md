@@ -256,6 +256,37 @@ Add more advanced form-validation rules, dynamically update the DOM based on use
 | `public/js/tasks.js` | Manages DOM sorting, filtering, modals, and fetch calls |
 | `POST /tasks/:id/toggle` | Server endpoint to toggle completion status temporarily |
 
+## Internship Task 5 – Objective
+
+Create RESTful API endpoints for CRUD operations and develop a frontend interface that interacts dynamically with the API without requiring a page reload.
+
+### Task 5 Features
+
+- ✅ **REST API Architecture**: Clean separation of `pageRoutes`, `apiRoutes`, `taskController`, and `taskStore`.
+- ✅ **API Endpoints**: 
+  - `GET /api/tasks` (with optional search, sort, filter queries)
+  - `GET /api/tasks/:id`
+  - `POST /api/tasks`
+  - `PUT /api/tasks/:id`
+  - `DELETE /api/tasks/:id`
+  - `PATCH /api/tasks/:id/status`
+- ✅ **JSON Response Format**: Standardized `{ success, message, data, errors }` structure for all API replies.
+- ✅ **Frontend `fetch()` Integration**: The Add Task form and the Task List page are fully powered by asynchronous JS requests.
+- ✅ **CRUD Operations via UI**: Users can Create, Read, Edit (Update), and Delete tasks smoothly via Bootstrap Modals.
+- ✅ **API Documentation Route**: Dedicated `/api-docs` page clearly outlining all endpoints and payload structures.
+- ✅ **Temporary-storage Limitation**: Storage is still in-memory until MongoDB is added in Task 6.
+
+### New Files / Structure (Task 5)
+
+| File / Folder | Purpose |
+|---|---|
+| `data/taskStore.js` | Isolated module managing the temporary task array |
+| `controllers/taskController.js` | Contains all CRUD logic mapping to endpoints |
+| `routes/apiRoutes.js` | Express router specifically for JSON API endpoints |
+| `routes/pageRoutes.js` | Express router for traditional EJS page navigation |
+| `middleware/apiErrorHandler.js` | Specific handler guaranteeing JSON errors on `/api/*` |
+| `views/api-docs.ejs` | Documentation for the REST API |
+
 ## Future Development
 
 This project will be extended progressively across the remaining internship tasks:
@@ -264,9 +295,9 @@ This project will be extended progressively across the remaining internship task
 - ~~**Task 2** – Validation, interaction, and temporary storage~~
 - ~~**Task 3** – Advanced CSS styling and responsive design (Bootstrap)~~
 - ~~**Task 4** – Complex form validation and dynamic DOM manipulation~~
-- **Task 5** – MongoDB integration for persistent data storage
-- **Task 6** – REST API development
-- **Task 7** – React frontend integration
-- **Task 8** – Authentication and deployment
+- ~~**Task 5** – API Integration and Front-End Interaction~~
+- **Task 6** – MongoDB integration for persistent data storage
+- **Task 7** – Authentication and deployment
+- **Task 8** – React frontend integration (Optional)
 
-> **Note:** No database, authentication, or frontend framework has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 4.
+> **Note:** No database or authentication has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 6.

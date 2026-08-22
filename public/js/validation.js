@@ -305,9 +305,67 @@
       return;
     }
 
+    e.preventDefault(); // Always prevent default form submission now
+
     // Disable submit button to prevent duplicate submissions
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting...';
+
+    // Gather form data
+    var formData = {
+      studentName: fields.studentName.value,
+      email: fields.email.value,
+      taskTitle: fields.taskTitle.value,
+      subject: fields.subject.value,
+      description: fields.description.value,
+      deadline: fields.deadline.value,
+      priority: fields.priority.value,
+      category: fields.category.value,
+      customCategory: fields.customCategory ? fields.customCategory.value : '',
+      estimatedHours: fields.estimatedHours.value
+    };
+
+    // Submit via API
+    fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+    .then(function(response) {
+      return response.json().then(data => ({ status: response.status, data }));
+    })
+    .then(function(result) {
+      if (result.status === 201 && result.data.success) {
+        // Success! Redirect to task list
+        window.location.href = '/tasks';
+      } else if (result.status === 400 && result.data.errors) {
+        // Validation errors from server
+        var apiErrors = result.data.errors;
+        for (var key in apiErrors) {
+          if (apiErrors.hasOwnProperty(key)) {
+            showFieldStatus(key, apiErrors[key]);
+          }
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Task';
+        
+        var firstInvalid = form.querySelector('.field-invalid');
+        if (firstInvalid) {
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        alert(result.data.message || 'An unexpected error occurred.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Task';
+      }
+    })
+    .catch(function(error) {
+      console.error('Error submitting task:', error);
+      alert('Network error. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Task';
+    });
   });
 
   // ──── Reset Button with Confirmation ────
