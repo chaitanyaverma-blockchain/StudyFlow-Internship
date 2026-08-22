@@ -400,6 +400,10 @@ a {
 [data-theme="dark"] .status-complete { background-color: #0f5132; color: #badbcc; }
 
 /* ===== Semantic Text Utilities ===== */
+.task-detail-value {
+  color: var(--text-primary);
+}
+
 .text-theme-primary {
   color: var(--text-primary) !important;
 }

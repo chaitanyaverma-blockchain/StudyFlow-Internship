@@ -16,32 +16,32 @@
             <table class="table table-striped table-hover mb-0">
               <tbody>
                 <tr>
-                  <th scope="row" class="w-25 border-top-0 ps-4 pt-3">Student Name</th>
-                  <td class="border-top-0 pt-3"><%= task.studentName %></td>
+                  <th scope="row" class="w-25 border-top-0 ps-4 pt-3 text-theme-secondary">Student Name</th>
+                  <td class="border-top-0 pt-3 task-detail-value"><%= task.studentName %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Email</th>
-                  <td><%= task.email %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Email</th>
+                  <td class="task-detail-value"><%= task.email %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Task Title</th>
-                  <td class="fw-bold"><%= task.taskTitle %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Task Title</th>
+                  <td class="fw-bold task-detail-value"><%= task.taskTitle %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Subject</th>
-                  <td><%= task.subject %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Subject</th>
+                  <td class="task-detail-value"><%= task.subject %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Description</th>
-                  <td class="text-break"><%= task.description %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Description</th>
+                  <td class="text-break task-detail-value"><%= task.description %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Deadline</th>
-                  <td><%= task.deadline %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Deadline</th>
+                  <td class="task-detail-value"><%= task.deadline %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4 align-middle">Priority</th>
-                  <td>
+                  <th scope="row" class="ps-4 align-middle text-theme-secondary">Priority</th>
+                  <td class="task-detail-value">
                     <% 
                       let badgeClass = 'bg-secondary';
                       if (task.priority === 'High') badgeClass = 'bg-danger';
@@ -54,12 +54,12 @@
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4">Category</th>
-                  <td><%= task.category %></td>
+                  <th scope="row" class="ps-4 text-theme-secondary">Category</th>
+                  <td class="task-detail-value"><%= task.category %></td>
                 </tr>
                 <tr>
-                  <th scope="row" class="ps-4 pb-3">Estimated Hours</th>
-                  <td class="pb-3"><%= task.estimatedHours %> hour<%= task.estimatedHours !== 1 ? 's' : '' %></td>
+                  <th scope="row" class="ps-4 pb-3 text-theme-secondary">Estimated Hours</th>
+                  <td class="pb-3 task-detail-value"><%= task.estimatedHours %> hour<%= task.estimatedHours !== 1 ? 's' : '' %></td>
                 </tr>
               </tbody>
             </table>
