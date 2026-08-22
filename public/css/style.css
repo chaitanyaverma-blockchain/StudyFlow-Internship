@@ -378,7 +378,9 @@ a {
   --bs-table-bg: var(--bg-card);
   --bs-table-color: var(--text-primary);
   --bs-table-striped-bg: var(--table-stripe-bg);
+  --bs-table-striped-color: var(--text-primary);
   --bs-table-hover-bg: var(--table-hover-bg);
+  --bs-table-hover-color: var(--text-primary);
   --bs-table-border-color: var(--border-color);
   color: var(--text-primary);
 }
