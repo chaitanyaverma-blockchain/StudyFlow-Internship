@@ -29,10 +29,13 @@ app.get('/', (req, res) => {
 
 // Add Task page
 app.get('/tasks/new', (req, res) => {
+  // Pass only necessary data for client-side duplicate checking
+  const activeTasks = tasks.filter(t => !t.completed).map(t => ({ title: t.taskTitle, email: t.email }));
   res.render('add-task', {
     title: 'Add Task',
     errors: {},
-    formData: {}
+    formData: {},
+    tasks: activeTasks
   });
 });
 
@@ -67,15 +70,29 @@ app.get('/tasks', (req, res) => {
 
 // Handle task form submission with server-side validation
 app.post('/tasks', validateTask, (req, res) => {
-  const errors = req.validationErrors;
-  const data = req.taskData;
+  const errors = req.validationErrors || {};
+  const data = req.taskData || req.body;
+
+  // Check for duplicates (same email, same title, active)
+  if (!errors.taskTitle && data.email && data.taskTitle) {
+    const isDuplicate = tasks.some(t => 
+      t.email.toLowerCase() === data.email.toLowerCase() && 
+      t.taskTitle.toLowerCase() === data.taskTitle.toLowerCase() && 
+      !t.completed
+    );
+    if (isDuplicate) {
+      errors.taskTitle = 'An active task with this title already exists for your email.';
+    }
+  }
 
   // If validation fails, re-render the form with errors and previous values
   if (Object.keys(errors).length > 0) {
+    const activeTasks = tasks.filter(t => !t.completed).map(t => ({ title: t.taskTitle, email: t.email }));
     return res.status(400).render('add-task', {
       title: 'Add Task',
       errors: errors,
-      formData: data
+      formData: data,
+      tasks: activeTasks
     });
   }
 
@@ -89,10 +106,10 @@ app.post('/tasks', validateTask, (req, res) => {
     description: data.description,
     deadline: data.deadline,
     priority: data.priority,
-    category: data.category,
+    category: data.category === 'Other' ? data.customCategory : data.category,
     estimatedHours: data.estimatedHours,
     completed: false,
-    createdAt: new Date()
+    createdAt: new Date().toISOString()
   };
 
   tasks.push(newTask);
@@ -102,6 +119,20 @@ app.post('/tasks', validateTask, (req, res) => {
     title: 'Task Added',
     task: newTask
   });
+});
+
+// Toggle task completion
+app.post('/tasks/:id/toggle', express.json(), (req, res) => {
+  const taskId = parseInt(req.params.id, 10);
+  const taskIndex = tasks.findIndex(t => t.id === taskId);
+  
+  if (taskIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Task not found' });
+  }
+
+  tasks[taskIndex].completed = !tasks[taskIndex].completed;
+  
+  res.json({ success: true, task: tasks[taskIndex] });
 });
 
 // About page

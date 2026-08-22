@@ -231,6 +231,31 @@ The server will start at **http://localhost:3000**.
 - [ ] Accessibility: Sufficient contrast and `prefers-reduced-motion` support
 - [ ] Previous Task 1 and 2 features (like validation and temporary storage) still function perfectly
 
+## Internship Task 4 – Objective
+
+Add more advanced form-validation rules, dynamically update the DOM based on user interactions, and implement lightweight client-side routing for a smoother experience without resorting to a full SPA framework.
+
+### Task 4 Features
+
+- ✅ **Advanced Validation**: Stricter rules for email, spaces, titles, and decimals.
+- ✅ **Custom Category**: Dynamic field appears when "Other" is selected.
+- ✅ **Dynamic Deadline Status**: Live display of "Due today", "Overdue!", etc.
+- ✅ **Duplicate Checking**: Server-side and client-side warning for identical active tasks.
+- ✅ **Live Search**: Filter task cards by title, subject, student without reloading.
+- ✅ **Dynamic Filters**: Filter by Priority, Deadline status, and Completion state.
+- ✅ **DOM Sorting**: Sort tasks by Date, Deadline, Priority, or Title purely via DOM manipulation.
+- ✅ **Task Details Modal**: Bootstrap modal populated dynamically to view complete task data.
+- ✅ **Completion Toggle**: Non-REST `POST /tasks/:id/toggle` endpoint accessed via `fetch()` to mark tasks completed/pending with visual DOM updates.
+- ✅ **Client-side Routing**: Hash-based routing (`#all`, `#pending`, `#high-priority`) updates active filters automatically.
+- ✅ **User Feedback**: Dynamic empty states and toast notifications on actions.
+
+### New Files / Routes (Task 4)
+
+| File / Route | Purpose |
+|---|---|
+| `public/js/tasks.js` | Manages DOM sorting, filtering, modals, and fetch calls |
+| `POST /tasks/:id/toggle` | Server endpoint to toggle completion status temporarily |
+
 ## Future Development
 
 This project will be extended progressively across the remaining internship tasks:
@@ -238,9 +263,10 @@ This project will be extended progressively across the remaining internship task
 - ~~**Task 1** – HTML structure and basic server interaction~~
 - ~~**Task 2** – Validation, interaction, and temporary storage~~
 - ~~**Task 3** – Advanced CSS styling and responsive design (Bootstrap)~~
-- **Task 4** – MongoDB integration for persistent data storage (Previously Task 3, pushed back)
-- **Task 5** – REST API development
-- **Task 6** – React frontend integration
-- **Task 7** – Authentication and deployment
+- ~~**Task 4** – Complex form validation and dynamic DOM manipulation~~
+- **Task 5** – MongoDB integration for persistent data storage
+- **Task 6** – REST API development
+- **Task 7** – React frontend integration
+- **Task 8** – Authentication and deployment
 
 > **Note:** No database, authentication, or frontend framework has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 4.

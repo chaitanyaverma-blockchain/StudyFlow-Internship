@@ -9,48 +9,106 @@
   </div>
 
   <!-- Summary Statistics Cards -->
-  <div class="row g-3 mb-5">
+  <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
         <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Total Tasks</h5>
-        <p class="display-6 fw-bold text-primary mb-0"><%= stats.total %></p>
+        <p class="display-6 fw-bold text-primary mb-0" id="summary-total"><%= stats.total %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
         <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">High Priority</h5>
-        <p class="display-6 fw-bold text-danger mb-0"><%= stats.highPriority %></p>
+        <p class="display-6 fw-bold text-danger mb-0" id="summary-high"><%= stats.highPriority %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
-        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Upcoming</h5>
-        <p class="display-6 fw-bold text-warning mb-0"><%= stats.upcoming %></p>
+        <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Pending</h5>
+        <p class="display-6 fw-bold text-warning mb-0" id="summary-pending"><%= stats.total - stats.completed %></p>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="card h-100 text-center border-0 shadow-sm p-3">
         <h5 class="card-title text-theme-secondary small text-uppercase fw-bold mb-2">Completed</h5>
-        <p class="display-6 fw-bold text-success mb-0"><%= stats.completed %></p>
+        <p class="display-6 fw-bold text-success mb-0" id="summary-completed"><%= stats.completed %></p>
       </div>
     </div>
   </div>
 
-  <% if (tasks.length === 0) { %>
-    <div class="card border-0 shadow-sm text-center py-5 px-3">
-      <div class="card-body">
-        <span class="display-1 text-muted opacity-50 mb-3 d-block">📋</span>
-        <h2 class="h4 fw-bold text-theme-heading">No Tasks Yet</h2>
-        <p class="text-theme-secondary mb-4">You haven't added any tasks. Start by creating your first study task!</p>
-        <a href="/tasks/new" class="btn btn-primary px-4 py-2">Add Your First Task</a>
+  <!-- Search and Controls Area -->
+  <% if (tasks.length > 0) { %>
+    <div class="card border-0 shadow-sm p-3 mb-4 section-accent">
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-md-5">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent text-theme-secondary border-end-0"><span aria-hidden="true">🔍</span></span>
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search tasks by title, subject, student...">
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <select id="sortSelect" class="form-select text-theme-secondary">
+            <option value="default">Sort: Default (Newest First)</option>
+            <option value="oldest">Oldest First</option>
+            <option value="deadlineAsc">Deadline: Nearest First</option>
+            <option value="deadlineDesc">Deadline: Farthest First</option>
+            <option value="priorityDesc">Priority: High to Low</option>
+            <option value="titleAsc">Title: A to Z</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3 text-md-end">
+          <button id="resetFiltersBtn" class="btn btn-outline-secondary w-100">Reset Filters</button>
+        </div>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="d-flex flex-wrap gap-2 mt-3" id="filterButtons">
+        <button class="btn btn-sm btn-primary filter-btn active" data-filter="all">All Tasks</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="high-priority">High Priority</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="medium-priority">Medium Priority</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="low-priority">Low Priority</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="due-today">Due Today</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="upcoming">Upcoming</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="completed">Completed</button>
+        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="pending">Pending</button>
+      </div>
+      
+      <div class="mt-2 text-theme-secondary small">
+        Showing <span id="visibleCount" class="fw-bold"><%= tasks.length %></span> of <%= tasks.length %> tasks
       </div>
     </div>
-  <% } else { %>
-    <!-- Task Cards Grid -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <% } %>
+
+  <!-- Task Cards Grid -->
+  <div id="tasksContainer" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+    <% if (tasks.length === 0) { %>
+      <div class="col-12 w-100" id="globalEmptyState">
+        <div class="card border-0 shadow-sm text-center py-5 px-3">
+          <div class="card-body">
+            <span class="display-1 text-muted opacity-50 mb-3 d-block">📋</span>
+            <h2 class="h4 fw-bold text-theme-heading">No Tasks Yet</h2>
+            <p class="text-theme-secondary mb-4">You haven't added any tasks. Start by creating your first study task!</p>
+            <a href="/tasks/new" class="btn btn-primary px-4 py-2">Add Your First Task</a>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
       <% tasks.forEach(function(task) { %>
-        <div class="col">
-          <div class="card h-100 card-hover">
+        <div class="col task-card-wrapper"
+             data-id="<%= task.id %>"
+             data-title="<%= String(task.taskTitle).toLowerCase() %>"
+             data-student="<%= String(task.studentName).toLowerCase() %>"
+             data-email="<%= String(task.email).toLowerCase() %>"
+             data-subject="<%= String(task.subject).toLowerCase() %>"
+             data-category="<%= String(task.category).toLowerCase() %>"
+             data-description="<%= String(task.description).toLowerCase() %>"
+             data-priority="<%= task.priority %>"
+             data-deadline="<%= task.deadline %>"
+             data-completed="<%= task.completed %>"
+             data-created="<%= task.createdAt %>"
+             data-hours="<%= task.estimatedHours %>">
+             
+          <div class="card h-100 card-hover <%= task.completed ? 'opacity-75' : '' %>" id="taskCard-<%= task.id %>">
             <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-start">
               <h3 class="h5 fw-bold mb-0 text-truncate pe-2 text-theme-heading" title="<%= task.taskTitle %>"><%= task.taskTitle %></h3>
               
@@ -65,24 +123,120 @@
             
             <div class="card-body">
               <ul class="list-unstyled mb-0 small text-theme-secondary">
-                <li class="mb-2"><strong><span aria-hidden="true">👤</span> Student:</strong> <%= task.studentName %></li>
                 <li class="mb-2"><strong><span aria-hidden="true">📚</span> Subject:</strong> <%= task.subject %></li>
-                <li class="mb-2"><strong><span aria-hidden="true">🏷️</span> Category:</strong> <%= task.category %></li>
                 <li class="mb-2"><strong><span aria-hidden="true">⏰</span> Deadline:</strong> <%= task.deadline %></li>
-                <li class="mb-2"><strong><span aria-hidden="true">⏳</span> Est. Hours:</strong> <%= task.estimatedHours %></li>
+                <li class="mb-2 text-truncate" title="<%= task.description %>"><strong><span aria-hidden="true">📝</span> Desc:</strong> <%= task.description %></li>
               </ul>
             </div>
             
-            <div class="card-footer bg-transparent border-top-0 pb-3 pt-0">
-              <span class="status-badge status-<%= task.completed ? 'complete' : 'pending' %>">
-                <%= task.completed ? 'Completed' : 'Pending' %>
-              </span>
+            <div class="card-footer bg-transparent border-top-0 pb-3 pt-0 d-flex flex-column gap-2">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="status-badge status-<%= task.completed ? 'complete' : 'pending' %>" id="statusBadge-<%= task.id %>">
+                  <%= task.completed ? 'Completed' : 'Pending' %>
+                </span>
+                <span class="small text-theme-secondary"><strong>⏳</strong> <%= task.estimatedHours %> hrs</span>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary flex-grow-1 view-details-btn" data-id="<%= task.id %>">View Details</button>
+                <button class="btn btn-sm <%= task.completed ? 'btn-outline-secondary' : 'btn-primary' %> toggle-status-btn flex-grow-1" data-id="<%= task.id %>" id="toggleBtn-<%= task.id %>">
+                  <%= task.completed ? 'Mark Pending' : 'Mark Complete' %>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       <% }); %>
+    <% } %>
+  </div>
+
+  <!-- Empty State for Filters/Search (Hidden by default) -->
+  <div id="filterEmptyState" class="col-12 w-100 d-none">
+    <div class="card border-0 shadow-sm text-center py-5 px-3 section-accent">
+      <div class="card-body">
+        <span class="display-1 text-muted opacity-50 mb-3 d-block">🔍</span>
+        <h2 class="h4 fw-bold text-theme-heading">No Matching Tasks</h2>
+        <p class="text-theme-secondary mb-4">We couldn't find any tasks matching your current search or filters.</p>
+        <button id="emptyStateResetBtn" class="btn btn-primary px-4 py-2">Clear Filters</button>
+      </div>
     </div>
-  <% } %>
+  </div>
+
 </div>
+
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="taskDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow" style="background-color: var(--bg-card);">
+      <div class="modal-header border-bottom-0 pb-0">
+        <h5 class="modal-title fw-bold h4 text-theme-heading" id="taskDetailsModalLabel">Task Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-3 pb-4">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <h6 class="fw-bold text-theme-secondary mb-1">Title</h6>
+            <p class="text-theme-heading fs-5" id="modal-title"></p>
+          </div>
+          <div class="col-md-4">
+            <h6 class="fw-bold text-theme-secondary mb-1">Status</h6>
+            <span id="modal-status" class="status-badge"></span>
+          </div>
+          
+          <div class="col-md-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Student</h6>
+            <p class="text-theme-heading mb-0" id="modal-student"></p>
+            <p class="text-theme-secondary small" id="modal-email"></p>
+          </div>
+          <div class="col-md-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Subject</h6>
+            <p class="text-theme-heading" id="modal-subject"></p>
+          </div>
+          
+          <div class="col-12">
+            <h6 class="fw-bold text-theme-secondary mb-1">Description</h6>
+            <div class="p-3 rounded" style="background-color: var(--bg-primary);">
+              <p class="text-theme-heading mb-0 text-break" style="white-space: pre-wrap;" id="modal-description"></p>
+            </div>
+          </div>
+          
+          <div class="col-md-3 col-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Deadline</h6>
+            <p class="text-theme-heading" id="modal-deadline"></p>
+          </div>
+          <div class="col-md-3 col-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Priority</h6>
+            <p class="text-theme-heading" id="modal-priority"></p>
+          </div>
+          <div class="col-md-3 col-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Category</h6>
+            <p class="text-theme-heading" id="modal-category"></p>
+          </div>
+          <div class="col-md-3 col-6">
+            <h6 class="fw-bold text-theme-secondary mb-1">Est. Hours</h6>
+            <p class="text-theme-heading" id="modal-hours"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-top-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container for Notifications -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+  <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body fw-bold" id="toastMessage">
+        Action successful!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Load Task 4 interactive scripts -->
+<script src="/js/tasks.js"></script>
 
 <%- include('partials/footer') %>

@@ -78,6 +78,7 @@
                 value="<%= (formData && formData.deadline) ? formData.deadline : '' %>"
                 required>
               <span class="field-error" id="deadlineError"><%= (errors && errors.deadline) ? errors.deadline : '' %></span>
+              <span id="deadlineMsg"></span>
             </div>
 
             <!-- Priority -->
@@ -106,6 +107,16 @@
                 <option value="Other" <%= (formData && formData.category === 'Other') ? 'selected' : '' %>>Other</option>
               </select>
               <span class="field-error" id="categoryError"><%= (errors && errors.category) ? errors.category : '' %></span>
+            </div>
+
+            <!-- Custom Category -->
+            <div class="col-md-6" id="customCategoryContainer" style="<%= (formData && formData.category === 'Other') ? 'display: block;' : 'display: none;' %>">
+              <label for="customCategory" class="form-label fw-bold">Custom Category</label>
+              <input type="text" id="customCategory" name="customCategory"
+                class="form-control <%= (errors && errors.customCategory) ? 'field-invalid' : '' %>"
+                placeholder="e.g. Extra Credit"
+                value="<%= (formData && formData.customCategory) ? formData.customCategory : '' %>">
+              <span class="field-error" id="customCategoryError"><%= (errors && errors.customCategory) ? errors.customCategory : '' %></span>
             </div>
 
             <!-- Estimated Hours -->
@@ -148,6 +159,10 @@
   </div>
 </div>
 
+<script>
+  // Inject active tasks for client-side duplicate checking
+  window.activeTasks = <%- JSON.stringify(tasks || []) %>;
+</script>
 <script src="/js/validation.js"></script>
 
 <%- include('partials/footer') %>
