@@ -2,7 +2,7 @@
 
 <div class="container my-5 animate-fade-in">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold mb-3 mb-md-0">My Tasks</h1>
+    <h1 class="fw-bold mb-3 mb-md-0 text-theme-heading">My Tasks</h1>
     <a href="/tasks/new" class="btn btn-primary shadow-sm">
       <span aria-hidden="true">+</span> Add New Task
     </a>
@@ -40,7 +40,7 @@
     <div class="card border-0 shadow-sm text-center py-5 px-3">
       <div class="card-body">
         <span class="display-1 text-muted opacity-50 mb-3 d-block">📋</span>
-        <h2 class="h4 fw-bold">No Tasks Yet</h2>
+        <h2 class="h4 fw-bold text-theme-heading">No Tasks Yet</h2>
         <p class="text-theme-secondary mb-4">You haven't added any tasks. Start by creating your first study task!</p>
         <a href="/tasks/new" class="btn btn-primary px-4 py-2">Add Your First Task</a>
       </div>
@@ -52,7 +52,7 @@
         <div class="col">
           <div class="card h-100 card-hover">
             <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-start">
-              <h3 class="h5 fw-bold mb-0 text-truncate pe-2" title="<%= task.taskTitle %>"><%= task.taskTitle %></h3>
+              <h3 class="h5 fw-bold mb-0 text-truncate pe-2 text-theme-heading" title="<%= task.taskTitle %>"><%= task.taskTitle %></h3>
               
               <% 
                 let badgeClass = 'bg-secondary';
