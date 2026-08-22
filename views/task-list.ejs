@@ -57,20 +57,20 @@
           </select>
         </div>
         <div class="col-12 col-md-3 text-md-end">
-          <button id="resetFiltersBtn" class="btn btn-outline-secondary w-100">Reset Filters</button>
+          <button type="button" id="resetFiltersBtn" class="btn btn-outline-secondary w-100">Reset Filters</button>
         </div>
       </div>
 
       <!-- Filter Buttons -->
       <div class="d-flex flex-wrap gap-2 mt-3" id="filterButtons">
-        <button class="btn btn-sm btn-primary filter-btn active" data-filter="all">All Tasks</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="high-priority">High Priority</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="medium-priority">Medium Priority</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="low-priority">Low Priority</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="due-today">Due Today</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="upcoming">Upcoming</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="completed">Completed</button>
-        <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="pending">Pending</button>
+        <button type="button" class="btn btn-sm btn-primary filter-btn task-filter-btn active" data-filter="all">All Tasks</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="high">High Priority</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="medium">Medium Priority</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="low">Low Priority</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="due-today">Due Today</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="upcoming">Upcoming</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="completed">Completed</button>
+        <button type="button" class="btn btn-sm btn-outline-primary filter-btn task-filter-btn" data-filter="pending">Pending</button>
       </div>
       
       <div class="mt-2 text-theme-secondary small">
@@ -95,17 +95,17 @@
     <% } else { %>
       <% tasks.forEach(function(task) { %>
         <div class="col task-card-wrapper"
-             data-id="<%= task.id %>"
+             data-task-id="<%= task.id %>"
              data-title="<%= String(task.taskTitle).toLowerCase() %>"
              data-student="<%= String(task.studentName).toLowerCase() %>"
              data-email="<%= String(task.email).toLowerCase() %>"
              data-subject="<%= String(task.subject).toLowerCase() %>"
              data-category="<%= String(task.category).toLowerCase() %>"
              data-description="<%= String(task.description).toLowerCase() %>"
-             data-priority="<%= task.priority %>"
+             data-priority="<%= task.priority.toLowerCase() %>"
              data-deadline="<%= task.deadline %>"
              data-completed="<%= task.completed %>"
-             data-created="<%= task.createdAt %>"
+             data-created-at="<%= task.createdAt %>"
              data-hours="<%= task.estimatedHours %>">
              
           <div class="card h-100 card-hover <%= task.completed ? 'opacity-75' : '' %>" id="taskCard-<%= task.id %>">
@@ -137,8 +137,8 @@
                 <span class="small text-theme-secondary"><strong>⏳</strong> <%= task.estimatedHours %> hrs</span>
               </div>
               <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-outline-primary flex-grow-1 view-details-btn" data-id="<%= task.id %>">View Details</button>
-                <button class="btn btn-sm <%= task.completed ? 'btn-outline-secondary' : 'btn-primary' %> toggle-status-btn flex-grow-1" data-id="<%= task.id %>" id="toggleBtn-<%= task.id %>">
+                <button type="button" class="btn btn-sm btn-outline-primary flex-grow-1 view-details-btn" data-id="<%= task.id %>">View Details</button>
+                <button type="button" class="btn btn-sm <%= task.completed ? 'btn-outline-secondary' : 'btn-primary' %> toggle-status-btn flex-grow-1" data-id="<%= task.id %>" id="toggleBtn-<%= task.id %>">
                   <%= task.completed ? 'Mark Pending' : 'Mark Complete' %>
                 </button>
               </div>
@@ -156,7 +156,7 @@
         <span class="display-1 text-muted opacity-50 mb-3 d-block">🔍</span>
         <h2 class="h4 fw-bold text-theme-heading">No Matching Tasks</h2>
         <p class="text-theme-secondary mb-4">We couldn't find any tasks matching your current search or filters.</p>
-        <button id="emptyStateResetBtn" class="btn btn-primary px-4 py-2">Clear Filters</button>
+        <button type="button" id="emptyStateResetBtn" class="btn btn-primary px-4 py-2">Clear Filters</button>
       </div>
     </div>
   </div>
@@ -237,6 +237,6 @@
 </div>
 
 <!-- Load Task 4 interactive scripts -->
-<script src="/js/tasks.js"></script>
+<script src="/js/tasks.js" defer></script>
 
 <%- include('partials/footer') %>

@@ -1,13 +1,13 @@
 // Task 4: Dynamic Interactions for the Task List page
 
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   'use strict';
 
   // --- DOM Elements ---
   const searchInput = document.getElementById('searchInput');
   const sortSelect = document.getElementById('sortSelect');
   const resetFiltersBtn = document.getElementById('resetFiltersBtn');
-  const filterButtons = document.querySelectorAll('.filter-btn');
+  const filterButtonsContainer = document.getElementById('filterButtons');
   const tasksContainer = document.getElementById('tasksContainer');
   const visibleCountSpan = document.getElementById('visibleCount');
   const filterEmptyState = document.getElementById('filterEmptyState');
@@ -22,8 +22,8 @@
 
   // Modal Elements
   const taskDetailsModal = document.getElementById('taskDetailsModal');
-  let bsModal = null; // Will be initialized if modal exists
-  if (taskDetailsModal) {
+  let bsModal = null;
+  if (taskDetailsModal && typeof bootstrap !== 'undefined') {
     bsModal = new bootstrap.Modal(taskDetailsModal);
   }
 
@@ -31,7 +31,7 @@
   const liveToast = document.getElementById('liveToast');
   const toastMessage = document.getElementById('toastMessage');
   let bsToast = null;
-  if (liveToast) {
+  if (liveToast && typeof bootstrap !== 'undefined') {
     bsToast = new bootstrap.Toast(liveToast);
   }
 
@@ -44,7 +44,6 @@
   let currentSort = 'default';
   
   // Get all task cards as an array for easier sorting/filtering
-  // Note: we ignore the globalEmptyState and filterEmptyState nodes
   const getTaskCards = () => Array.from(document.querySelectorAll('.task-card-wrapper'));
 
   // --- 1. Search & Filtering ---
@@ -53,7 +52,7 @@
     const cards = getTaskCards();
     let visibleCount = 0;
     
-    // Determine today for "due-today" and "upcoming"
+    // Determine today for "due-today" and "upcoming" without timezone shift
     const today = new Date();
     today.setHours(0,0,0,0);
 
@@ -62,7 +61,6 @@
       let matchesSearch = true;
       if (currentSearch) {
         const searchTerms = currentSearch.toLowerCase();
-        // Get all searchable text from data attributes
         const title = card.getAttribute('data-title') || '';
         const student = card.getAttribute('data-student') || '';
         const email = card.getAttribute('data-email') || '';
@@ -83,9 +81,9 @@
       const deadline = card.getAttribute('data-deadline');
       
       switch (currentFilter) {
-        case 'high-priority': matchesFilter = (priority === 'High'); break;
-        case 'medium-priority': matchesFilter = (priority === 'Medium'); break;
-        case 'low-priority': matchesFilter = (priority === 'Low'); break;
+        case 'high': matchesFilter = (priority === 'high'); break;
+        case 'medium': matchesFilter = (priority === 'medium'); break;
+        case 'low': matchesFilter = (priority === 'low'); break;
         case 'completed': matchesFilter = isCompleted; break;
         case 'pending': matchesFilter = !isCompleted; break;
         case 'due-today':
@@ -93,7 +91,8 @@
           if (!deadline) {
             matchesFilter = false;
           } else {
-            const deadlineDate = new Date(deadline + 'T00:00:00');
+            const parts = deadline.split('-');
+            const deadlineDate = new Date(parts[0], parts[1] - 1, parts[2]);
             const diffTime = deadlineDate - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
@@ -119,10 +118,9 @@
       }
     });
 
-    // Handle Empty State
+    // Handle Empty State and Count
     if (visibleCountSpan) visibleCountSpan.textContent = visibleCount;
     
-    // Only manage filter empty state if there are actually tasks in the system
     if (!globalEmptyState && filterEmptyState) {
       if (visibleCount === 0) {
         filterEmptyState.classList.remove('d-none');
@@ -138,25 +136,20 @@
     const cards = getTaskCards();
     
     cards.sort((a, b) => {
-      // Helper function to get sortable values
       const getVal = (card, attr) => card.getAttribute(attr);
       
       switch (currentSort) {
         case 'oldest':
-          // We assume DOM order is newest first by default if we prepend, but our server appends.
-          // Wait, server pushes to array, so array is oldest first. 
-          // Let's use data-id to be safe. Higher ID = newer.
-          return parseInt(getVal(a, 'data-id')) - parseInt(getVal(b, 'data-id'));
+          return parseInt(getVal(a, 'data-task-id')) - parseInt(getVal(b, 'data-task-id'));
           
         case 'deadlineAsc':
         case 'deadlineDesc':
-          const dateA = new Date(getVal(a, 'data-deadline') + 'T00:00:00').getTime();
-          const dateB = new Date(getVal(b, 'data-deadline') + 'T00:00:00').getTime();
-          return currentSort === 'deadlineAsc' ? dateA - dateB : dateB - dateA;
+          const valA = getVal(a, 'data-deadline') || '9999-99-99';
+          const valB = getVal(b, 'data-deadline') || '9999-99-99';
+          return currentSort === 'deadlineAsc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
           
         case 'priorityDesc':
-          // High > Medium > Low
-          const pScore = { 'High': 3, 'Medium': 2, 'Low': 1 };
+          const pScore = { 'high': 3, 'medium': 2, 'low': 1 };
           const pA = pScore[getVal(a, 'data-priority')] || 0;
           const pB = pScore[getVal(b, 'data-priority')] || 0;
           return pB - pA;
@@ -168,13 +161,11 @@
           
         case 'default':
         default:
-          // Default: Newest first (highest ID)
-          return parseInt(getVal(b, 'data-id')) - parseInt(getVal(a, 'data-id'));
+          return parseInt(getVal(b, 'data-task-id')) - parseInt(getVal(a, 'data-task-id'));
       }
     });
 
-    // Re-append to DOM in new order
-    // Ensure we don't move the empty state node if it exists
+    // Re-append to DOM in new order safely
     cards.forEach(card => tasksContainer.appendChild(card));
     if (filterEmptyState) tasksContainer.appendChild(filterEmptyState);
   }
@@ -195,25 +186,34 @@
     });
   }
 
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  // Event delegation for filter buttons
+  if (filterButtonsContainer) {
+    filterButtonsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.task-filter-btn');
+      if (!btn) return;
+
       // Update UI active state
-      filterButtons.forEach(b => {
+      const allBtns = filterButtonsContainer.querySelectorAll('.task-filter-btn');
+      allBtns.forEach(b => {
         b.classList.remove('btn-primary', 'active');
         b.classList.add('btn-outline-primary');
       });
-      e.target.classList.remove('btn-outline-primary');
-      e.target.classList.add('btn-primary', 'active');
+      btn.classList.remove('btn-outline-primary');
+      btn.classList.add('btn-primary', 'active');
 
       // Update state and apply
-      currentFilter = e.target.getAttribute('data-filter');
+      currentFilter = btn.getAttribute('data-filter');
       
-      // Update URL Hash for routing
-      window.location.hash = currentFilter;
+      // Update URL Hash for routing cleanly without reloading
+      if(history.pushState) {
+        history.pushState(null, null, `#${currentFilter}`);
+      } else {
+        window.location.hash = currentFilter;
+      }
       
       applyFiltersAndSearch();
     });
-  });
+  }
 
   function resetAllFilters() {
     currentSearch = '';
@@ -223,18 +223,25 @@
     if (searchInput) searchInput.value = '';
     if (sortSelect) sortSelect.value = 'default';
     
-    // Reset buttons
-    filterButtons.forEach(b => {
-      b.classList.remove('btn-primary', 'active');
-      b.classList.add('btn-outline-primary');
-      if (b.getAttribute('data-filter') === 'all') {
-        b.classList.remove('btn-outline-primary');
-        b.classList.add('btn-primary', 'active');
-      }
-    });
+    // Reset buttons safely
+    if (filterButtonsContainer) {
+      const allBtns = filterButtonsContainer.querySelectorAll('.task-filter-btn');
+      allBtns.forEach(b => {
+        b.classList.remove('btn-primary', 'active');
+        b.classList.add('btn-outline-primary');
+        if (b.getAttribute('data-filter') === 'all') {
+          b.classList.remove('btn-outline-primary');
+          b.classList.add('btn-primary', 'active');
+        }
+      });
+    }
     
     // Clear hash cleanly
-    history.pushState("", document.title, window.location.pathname + window.location.search);
+    if (history.pushState) {
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+    } else {
+      window.location.hash = '';
+    }
 
     applyFiltersAndSearch();
     applySorting();
@@ -246,46 +253,55 @@
   // --- 4. Hash Routing ---
   
   function handleHashChange() {
-    const hash = window.location.hash.substring(1); // remove '#'
+    let hash = window.location.hash.substring(1);
     if (!hash) return;
     
+    // Map old 'high-priority' to 'high' safely
+    if (hash === 'high-priority') hash = 'high';
+    if (hash === 'medium-priority') hash = 'medium';
+    if (hash === 'low-priority') hash = 'low';
+
     // Find matching button
-    const targetBtn = Array.from(filterButtons).find(b => b.getAttribute('data-filter') === hash);
-    if (targetBtn) {
-      targetBtn.click(); // Re-use the click logic
-    } else {
-      // Fallback to all
-      resetAllFilters();
+    if (filterButtonsContainer) {
+      const targetBtn = filterButtonsContainer.querySelector(`.task-filter-btn[data-filter="${hash}"]`);
+      if (targetBtn) {
+        targetBtn.click();
+      } else {
+        resetAllFilters();
+      }
     }
   }
 
   window.addEventListener('hashchange', handleHashChange);
 
 
-  // --- 5. Task Details Modal ---
+  // --- 5. Task Details Modal & Toggle ---
 
-  // Event delegation on the container
   tasksContainer.addEventListener('click', (e) => {
-    // Check if View Details was clicked
+    // 1. View Details Modal
     if (e.target.closest('.view-details-btn')) {
       const btn = e.target.closest('.view-details-btn');
       const taskId = btn.getAttribute('data-id');
-      const card = document.querySelector(`.task-card-wrapper[data-id="${taskId}"]`);
+      const card = document.querySelector(`.task-card-wrapper[data-task-id="${taskId}"]`);
       
       if (!card || !bsModal) return;
 
-      // Populate modal safely using textContent (prevents XSS)
+      const priority = card.getAttribute('data-priority');
+      let displayPriority = priority;
+      if(priority === 'high') displayPriority = 'High';
+      if(priority === 'medium') displayPriority = 'Medium';
+      if(priority === 'low') displayPriority = 'Low';
+
       document.getElementById('modal-title').textContent = card.querySelector('h3').textContent;
-      document.getElementById('modal-student').textContent = card.getAttribute('data-student').replace(/\b\w/g, l => l.toUpperCase()); // Capitalize
+      document.getElementById('modal-student').textContent = card.getAttribute('data-student').replace(/\b\w/g, l => l.toUpperCase()); 
       document.getElementById('modal-email').textContent = card.getAttribute('data-email');
       document.getElementById('modal-subject').textContent = card.getAttribute('data-subject').replace(/\b\w/g, l => l.toUpperCase());
       document.getElementById('modal-description').textContent = card.getAttribute('data-description').charAt(0).toUpperCase() + card.getAttribute('data-description').slice(1);
       document.getElementById('modal-deadline').textContent = card.getAttribute('data-deadline');
-      document.getElementById('modal-priority').textContent = card.getAttribute('data-priority');
+      document.getElementById('modal-priority').textContent = displayPriority;
       document.getElementById('modal-category').textContent = card.getAttribute('data-category').replace(/\b\w/g, l => l.toUpperCase());
       document.getElementById('modal-hours').textContent = card.getAttribute('data-hours');
       
-      // Status formatting
       const isCompleted = card.getAttribute('data-completed') === 'true';
       const statusBadge = document.getElementById('modal-status');
       statusBadge.textContent = isCompleted ? 'Completed' : 'Pending';
@@ -294,22 +310,20 @@
       bsModal.show();
     }
 
-    // --- 6. Task Completion Toggle ---
+    // 2. Task Completion Toggle
     if (e.target.closest('.toggle-status-btn')) {
       const btn = e.target.closest('.toggle-status-btn');
       const taskId = btn.getAttribute('data-id');
-      const card = document.querySelector(`.task-card-wrapper[data-id="${taskId}"]`);
+      const card = document.querySelector(`.task-card-wrapper[data-task-id="${taskId}"]`);
       const innerCard = document.getElementById(`taskCard-${taskId}`);
       const statusBadge = document.getElementById(`statusBadge-${taskId}`);
       
       if (!card) return;
 
-      // Disable button while processing
       btn.disabled = true;
       const originalText = btn.textContent;
       btn.textContent = 'Updating...';
 
-      // Call Express endpoint
       fetch(`/tasks/${taskId}/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -321,34 +335,30 @@
       .then(data => {
         if (data.success) {
           const isCompleted = data.task.completed;
-          
-          // Update DOM attributes
           card.setAttribute('data-completed', isCompleted.toString());
           
-          // Update card visuals
           if (isCompleted) {
             innerCard.classList.add('opacity-75');
             btn.classList.remove('btn-primary');
             btn.classList.add('btn-outline-secondary');
             btn.textContent = 'Mark Pending';
-            statusBadge.className = 'status-badge status-complete';
-            statusBadge.textContent = 'Completed';
+            if (statusBadge) {
+              statusBadge.className = 'status-badge status-complete';
+              statusBadge.textContent = 'Completed';
+            }
           } else {
             innerCard.classList.remove('opacity-75');
             btn.classList.add('btn-primary');
             btn.classList.remove('btn-outline-secondary');
             btn.textContent = 'Mark Complete';
-            statusBadge.className = 'status-badge status-pending';
-            statusBadge.textContent = 'Pending';
+            if (statusBadge) {
+              statusBadge.className = 'status-badge status-pending';
+              statusBadge.textContent = 'Pending';
+            }
           }
 
-          // Show Toast Success
           showToast(`Task marked as ${isCompleted ? 'Completed' : 'Pending'}!`, 'success');
-          
-          // Update Summary Stats dynamically
           updateSummaryStats();
-
-          // Re-apply filters so card hides if it no longer matches the current filter
           applyFiltersAndSearch();
         } else {
           throw new Error(data.message || 'Server error');
@@ -375,7 +385,7 @@
     let completed = 0;
 
     cards.forEach(card => {
-      if (card.getAttribute('data-priority') === 'High') high++;
+      if (card.getAttribute('data-priority') === 'high') high++;
       if (card.getAttribute('data-completed') === 'true') completed++;
     });
 
@@ -386,7 +396,6 @@
     if (summaryPending) summaryPending.textContent = pending;
     if (summaryCompleted) summaryCompleted.textContent = completed;
   }
-
 
   // --- 8. Notification Helpers ---
 
@@ -408,12 +417,10 @@
 
   // --- Initialize ---
   
-  // Sort default logic (DOM order)
   applySorting();
   
-  // Check hash on load
   if (window.location.hash) {
     handleHashChange();
   }
 
-})();
+});
