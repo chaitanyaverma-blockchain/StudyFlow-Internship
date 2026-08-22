@@ -322,7 +322,8 @@
       priority: fields.priority.value,
       category: fields.category.value,
       customCategory: fields.customCategory ? fields.customCategory.value : '',
-      estimatedHours: fields.estimatedHours.value
+      estimatedHours: fields.estimatedHours.value,
+      confirmation: fields.confirmation.checked
     };
 
     // Submit via API
