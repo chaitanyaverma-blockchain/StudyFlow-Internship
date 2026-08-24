@@ -354,8 +354,7 @@ After deployment, verify:
 - `/health` returns `{ "success": true, "message": "StudyFlow server is running" }`
 - 404 handling works
 
-> **Warning:** In-memory tasks will reset whenever the hosting service restarts or redeploys the application. This is expected behavior for Tasks 1–5.
-
+> **Note:** With the completion of Task 6, all tasks are securely stored in MongoDB and will persist across deployments and server restarts!
 ---
 
 ## 🔮 Future Improvements
