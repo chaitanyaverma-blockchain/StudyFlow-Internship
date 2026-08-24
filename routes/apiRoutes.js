@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
 const validateTask = require('../middleware/taskValidation');
+const { requireAuth } = require('../middleware/auth');
+
+// Protect all task routes
+router.use('/tasks', requireAuth);
 
 // GET /api/tasks
 router.get('/tasks', taskController.getAllTasks);

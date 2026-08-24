@@ -336,6 +336,11 @@
       return response.json().then(data => ({ status: response.status, data }));
     })
     .then(function(result) {
+      if (result.status === 401) {
+        alert('Session expired. Please log in again.');
+        window.location.href = '/login';
+        return;
+      }
       if (result.status === 201 && result.data.success) {
         // Success! Redirect to task list
         window.location.href = '/tasks';

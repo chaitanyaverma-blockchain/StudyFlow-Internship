@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+          <h1 class="h3 fw-bold mb-4 text-center text-theme-heading">Welcome Back</h1>
+          
+          <form id="loginForm" action="/login" method="POST">
+            <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label text-theme-heading fw-bold">Email Address</label>
+              <input type="email" class="form-control bg-theme-input text-theme-heading border-theme" id="email" name="email" required>
+            </div>
+            
+            <div class="mb-4">
+              <label for="password" class="form-label text-theme-heading fw-bold">Password</label>
+              <input type="password" class="form-control bg-theme-input text-theme-heading border-theme" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="loginBtn">Login</button>
+          </form>
+
+          <p class="text-center mt-4 text-theme-secondary">
+            Don't have an account? <a href="/register" class="text-decoration-none fw-bold text-brand">Register here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('loginBtn');
+  const errorDiv = document.getElementById('loginError');
+  
+  btn.disabled = true;
+  btn.textContent = 'Logging in...';
+  errorDiv.classList.add('d-none');
+  
+  try {
+    const formData = {
+      email: form.email.value,
+      password: form.password.value
+    };
+    
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      window.location.href = '/tasks';
+    } else {
+      errorDiv.textContent = result.message || 'Login failed';
+      errorDiv.classList.remove('d-none');
+      btn.disabled = false;
+      btn.textContent = 'Login';
+    }
+  } catch (err) {
+    errorDiv.textContent = 'Network error. Please try again.';
+    errorDiv.classList.remove('d-none');
+    btn.disabled = false;
+    btn.textContent = 'Login';
+  }
+});
+</script>
+
+<%- include('partials/footer') %>

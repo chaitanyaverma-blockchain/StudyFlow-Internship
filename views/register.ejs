@@ -1,0 +1,201 @@
+<%- include('partials/header') %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+          <h1 class="h3 fw-bold mb-4 text-center text-theme-heading">Create an Account</h1>
+          
+          <form id="registerForm" action="/register" method="POST">
+            <div id="registerAlert" class="alert d-none" role="alert"></div>
+
+            <div class="mb-3">
+              <label for="name" class="form-label text-theme-heading fw-bold">Full Name</label>
+              <input type="text" class="form-control bg-theme-input text-theme-heading border-theme" id="name" name="name" required minlength="2" maxlength="50">
+              <div class="invalid-feedback" id="nameError"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label text-theme-heading fw-bold">Email Address</label>
+              <input type="email" class="form-control bg-theme-input text-theme-heading border-theme" id="email" name="email" required>
+              <div class="invalid-feedback" id="emailError"></div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="password" class="form-label text-theme-heading fw-bold">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control bg-theme-input text-theme-heading border-theme" id="password" name="password" required>
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">Show</button>
+              </div>
+              
+              <!-- Password requirements checklist -->
+              <div class="mt-2 small text-theme-secondary" id="passwordReqs">
+                <div class="d-flex align-items-center mb-1"><span class="req-icon me-2">❌</span> At least 8 characters</div>
+                <div class="d-flex align-items-center mb-1"><span class="req-icon me-2">❌</span> One uppercase letter</div>
+                <div class="d-flex align-items-center mb-1"><span class="req-icon me-2">❌</span> One lowercase letter</div>
+                <div class="d-flex align-items-center mb-1"><span class="req-icon me-2">❌</span> One number</div>
+                <div class="d-flex align-items-center"><span class="req-icon me-2">❌</span> One special character</div>
+              </div>
+              <div class="invalid-feedback" id="passwordError"></div>
+            </div>
+
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label text-theme-heading fw-bold">Confirm Password</label>
+              <input type="password" class="form-control bg-theme-input text-theme-heading border-theme" id="confirmPassword" name="confirmPassword" required>
+              <div class="invalid-feedback" id="confirmPasswordError"></div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="registerBtn" disabled>Register</button>
+          </form>
+
+          <p class="text-center mt-4 text-theme-secondary">
+            Already have an account? <a href="/login" class="text-decoration-none fw-bold text-brand">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('registerForm');
+  const password = document.getElementById('password');
+  const confirmPassword = document.getElementById('confirmPassword');
+  const toggleBtn = document.getElementById('togglePassword');
+  const registerBtn = document.getElementById('registerBtn');
+  const reqIcons = document.querySelectorAll('.req-icon');
+  
+  // Password validation regexes
+  const reqs = [
+    /.{8,}/,           // 8+ chars
+    /[A-Z]/,           // uppercase
+    /[a-z]/,           // lowercase
+    /[0-9]/,           // number
+    /[!@#$%^&*(),.?":{}|<>]/ // special
+  ];
+  
+  // Toggle password visibility
+  toggleBtn.addEventListener('click', () => {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    toggleBtn.textContent = type === 'password' ? 'Show' : 'Hide';
+  });
+  
+  // Validate password live
+  const validatePassword = () => {
+    const val = password.value;
+    let validCount = 0;
+    
+    reqs.forEach((regex, i) => {
+      if (regex.test(val)) {
+        reqIcons[i].textContent = '✅';
+        validCount++;
+      } else {
+        reqIcons[i].textContent = '❌';
+      }
+    });
+    
+    return validCount === 5;
+  };
+  
+  // Validate confirm password live
+  const validateConfirm = () => {
+    if (confirmPassword.value === '') return false;
+    const match = password.value === confirmPassword.value;
+    if (match) {
+      confirmPassword.classList.remove('is-invalid');
+      confirmPassword.classList.add('is-valid');
+    } else {
+      confirmPassword.classList.remove('is-valid');
+      confirmPassword.classList.add('is-invalid');
+      document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+    }
+    return match;
+  };
+  
+  // Update button state based on validity
+  const updateBtnState = () => {
+    registerBtn.disabled = !(validatePassword() && validateConfirm() && form.name.value.length >= 2 && form.email.value.includes('@'));
+  };
+  
+  password.addEventListener('input', () => {
+    validatePassword();
+    validateConfirm();
+    updateBtnState();
+  });
+  
+  confirmPassword.addEventListener('input', () => {
+    validateConfirm();
+    updateBtnState();
+  });
+  
+  form.name.addEventListener('input', updateBtnState);
+  form.email.addEventListener('input', updateBtnState);
+  
+  // Form submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (!validatePassword() || !validateConfirm()) return;
+    
+    const alertDiv = document.getElementById('registerAlert');
+    registerBtn.disabled = true;
+    registerBtn.textContent = 'Registering...';
+    alertDiv.classList.add('d-none');
+    
+    // Clear previous errors
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+    try {
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        password: form.password.value,
+        confirmPassword: form.confirmPassword.value
+      };
+      
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Redirect to login or tasks
+        alertDiv.textContent = 'Registration successful! Redirecting...';
+        alertDiv.className = 'alert alert-success';
+        setTimeout(() => window.location.href = '/tasks', 1000);
+      } else {
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Register';
+        
+        if (result.errors) {
+          // Display validation errors
+          Object.keys(result.errors).forEach(key => {
+            const input = document.getElementById(key);
+            const errorDiv = document.getElementById(`${key}Error`);
+            if (input && errorDiv) {
+              input.classList.add('is-invalid');
+              errorDiv.textContent = result.errors[key];
+            }
+          });
+        } else {
+          alertDiv.textContent = result.message || 'Registration failed';
+          alertDiv.className = 'alert alert-danger';
+        }
+      }
+    } catch (err) {
+      alertDiv.textContent = 'Network error. Please try again.';
+      alertDiv.className = 'alert alert-danger';
+      registerBtn.disabled = false;
+      registerBtn.textContent = 'Register';
+    }
+  });
+});
+</script>
+
+<%- include('partials/footer') %>

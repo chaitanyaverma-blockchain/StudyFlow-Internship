@@ -32,15 +32,34 @@
             <li class="nav-item">
               <a class="nav-link <%= title === 'Home' ? 'active' : '' %>" href="/">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link <%= title === 'Add Task' ? 'active' : '' %>" href="/tasks/new">Add Task</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link <%= title === 'All Tasks' ? 'active' : '' %>" href="/tasks">View Tasks</a>
-            </li>
+            
+            <% if (locals.user) { %>
+              <li class="nav-item">
+                <a class="nav-link <%= title === 'Add Task' ? 'active' : '' %>" href="/tasks/new">Add Task</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= title === 'All Tasks' || title === 'My Tasks' ? 'active' : '' %>" href="/tasks">View Tasks</a>
+              </li>
+            <% } %>
+
             <li class="nav-item">
               <a class="nav-link <%= title === 'About' ? 'active' : '' %>" href="/about">About</a>
             </li>
+
+            <% if (!locals.user) { %>
+              <li class="nav-item">
+                <a class="nav-link <%= title === 'Login' ? 'active' : '' %>" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <%= title === 'Register' ? 'active' : '' %>" href="/register">Register</a>
+              </li>
+            <% } else { %>
+              <li class="nav-item">
+                <form action="/logout" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-link nav-link">Logout</button>
+                </form>
+              </li>
+            <% } %>
             <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
               <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Switch to dark mode">
                 <span id="themeIcon">🌙</span>

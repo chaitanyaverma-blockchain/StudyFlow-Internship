@@ -1,8 +1,30 @@
+require('dotenv').config();
+require('dns').setServers(['8.8.8.8']);
+
+// Sanitize MONGODB_URI if it contains invalid options
+if (process.env.MONGODB_URI) {
+  try {
+    const url = new URL(process.env.MONGODB_URI);
+    url.searchParams.delete('studyflow');
+    if (url.pathname === '/' || url.pathname === '') {
+      url.pathname = '/studyflow';
+    }
+    process.env.MONGODB_URI = url.toString();
+  } catch (e) {
+    // Ignore URL parsing errors here, let mongoose handle invalid URIs
+  }
+}
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
+const MongoStore = require('connect-mongo').default || require('connect-mongo').MongoStore || require('connect-mongo');
+const connectDB = require('./config/database');
 const apiRoutes = require('./routes/apiRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const apiErrorHandler = require('./middleware/apiErrorHandler');
+
+// Connect to MongoDB
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +39,28 @@ app.use(express.json({ limit: '1mb' }));
 
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ──── Session Configuration ────
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fallback_secret',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI
+  }),
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
+}));
+
+// Make user available to all EJS templates
+app.use((req, res, next) => {
+  res.locals.user = req.session.userId ? { id: req.session.userId } : null;
+  next();
+});
 
 // ──── Routes ────
 

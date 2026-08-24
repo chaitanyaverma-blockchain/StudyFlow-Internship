@@ -58,7 +58,13 @@ document.addEventListener('DOMContentLoaded', function() {
     errorState.classList.add('d-none');
     
     fetch('/api/tasks')
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login';
+          throw new Error('Unauthorized');
+        }
+        return res.json();
+      })
       .then(data => {
         loadingState.classList.add('d-none');
         if (data.success) {
@@ -420,7 +426,13 @@ document.addEventListener('DOMContentLoaded', function() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completed: !task.completed })
       })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login';
+          throw new Error('Unauthorized');
+        }
+        return res.json();
+      })
       .then(data => {
         if (data.success) {
           // Update local data
@@ -506,7 +518,13 @@ document.addEventListener('DOMContentLoaded', function() {
       confirmDeleteBtn.textContent = 'Deleting...';
 
       fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
-        .then(res => res.json())
+        .then(res => {
+          if (res.status === 401) {
+            window.location.href = '/login';
+            throw new Error('Unauthorized');
+          }
+          return res.json();
+        })
         .then(data => {
           if (data.success) {
             allTasksData = allTasksData.filter(t => t.id != taskId);
@@ -556,7 +574,13 @@ document.addEventListener('DOMContentLoaded', function() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-      .then(res => res.json())
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = '/login';
+          throw new Error('Unauthorized');
+        }
+        return res.json();
+      })
       .then(data => {
         if (data.success) {
           const index = allTasksData.findIndex(t => t.id == taskId);
