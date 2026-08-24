@@ -1,146 +1,122 @@
 # 📚 StudyFlow – Student Task Manager
 
-A student productivity web application for organizing studies, managing assignments, and tracking deadlines.
+A student productivity web application for organizing studies, managing assignments, and tracking deadlines. Built as part of a **Full Stack Development Internship** covering server-side rendering, form validation, responsive design, dynamic DOM manipulation, and REST API integration.
 
 ---
 
-## Internship Task 1 – Objective
+## 📋 Internship Context
 
-Introduce server-side rendering and basic form submission using **Node.js**, **Express.js**, and **EJS**. This task sets up the foundational project structure that will be extended in Tasks 2–6.
+**StudyFlow** was developed incrementally across five internship tasks, each building on the previous to demonstrate progressively advanced web development skills:
 
-### Task 1 Features
-
-- ✅ Responsive navigation bar with working links
-- ✅ Home page with hero section and feature cards
-- ✅ Add Task page with a complete HTML form
-- ✅ Server-side form handling with Express
-- ✅ Task success page displaying submitted data dynamically
-- ✅ About page with project information
-- ✅ Custom 404 page for invalid routes
-- ✅ Error handling page for server errors
-- ✅ EJS partials for reusable header and footer
-- ✅ Clean CSS with blue/purple colour palette
-- ✅ Mobile-responsive layout
+| Task | Focus Area | Status |
+|------|-----------|--------|
+| Task 1 | HTML Structure & Basic Server Interaction | ✅ Complete |
+| Task 2 | Client/Server Validation & Temporary Storage | ✅ Complete |
+| Task 3 | Advanced CSS & Responsive Design (Bootstrap 5) | ✅ Complete |
+| Task 4 | Dynamic DOM Manipulation & Client-Side Routing | ✅ Complete |
+| Task 5 | REST API & Front-End Interaction | ✅ Complete |
 
 ---
 
-## Internship Task 2 – Objective
+## ✨ Features
 
-Extend the existing forms, add client-side interaction and validation, implement server-side validation, and temporarily store valid task data on the server using an in-memory array.
+- **Task Management** — Create, view, edit, delete, and toggle completion of study tasks
+- **Form Validation** — Matching client-side and server-side validation with live feedback
+- **Live Character Counter** — Real-time character counting for description field
+- **Search & Filter** — Search tasks by title, subject, or student; filter by priority, status, deadline
+- **Sorting** — Sort by newest, oldest, deadline, priority, or title
+- **Hash-Based Routing** — URL-driven filter state (`#pending`, `#high`, `#completed`, etc.)
+- **REST API** — Full CRUD JSON API with standardized response format
+- **Dark/Light Mode** — Theme toggle with `localStorage` persistence across pages
+- **Responsive Design** — Mobile-first layout using Bootstrap 5 (375px–1440px+)
+- **Modals** — Task details, edit, and delete confirmation via Bootstrap modals
+- **Toast Notifications** — User feedback on CRUD actions
+- **API Documentation** — Dedicated `/api-docs` page describing all endpoints
+- **Health Check** — `GET /health` endpoint for deployment monitoring
 
-### Task 2 Features
+---
 
-- ✅ Extended form with new fields: email, category, estimated study hours, confirmation checkbox
-- ✅ Client-side validation with live feedback (red/green borders, error messages)
-- ✅ Live description character counter (e.g. `45/500`)
-- ✅ Server-side validation middleware with identical rules
-- ✅ Validation error messages displayed below each field
-- ✅ Previously entered values preserved on validation failure
-- ✅ Temporary in-memory task storage (array on server)
-- ✅ Task list page with card display and empty state
-- ✅ Duplicate submission prevention (submit button disabled after click)
-- ✅ Form reset button with confirmation prompt
-- ✅ "View Tasks" navigation link added
+## 🛠 Technologies Used
 
-### New Form Fields (Task 2)
+| Technology | Purpose |
+|-----------|---------|
+| **Node.js** | JavaScript runtime |
+| **Express.js** | Web framework |
+| **EJS** | Server-side templating |
+| **Bootstrap 5** | Responsive CSS framework |
+| **Vanilla JavaScript** | Client-side interactivity |
+| **CSS3** | Custom styling with CSS variables |
+| **Nodemon** | Development auto-restart |
 
-| Field | Type | Validation |
-|---|---|---|
-| Student Email | email | Required, valid email format |
-| Task Category | select | Required (Assignment, Exam Preparation, Project, Revision, Other) |
-| Estimated Study Hours | number | Required, between 1 and 100 |
-| Confirmation Checkbox | checkbox | Must be checked before submission |
+---
 
-### Client-Side Validation Rules
-
-| Field | Rule |
-|---|---|
-| Student Name | At least 2 characters, no numbers |
-| Email | Valid email format |
-| Task Title | Between 3 and 80 characters |
-| Subject | At least 2 characters |
-| Description | Between 10 and 500 characters |
-| Deadline | Required, cannot be in the past |
-| Priority | Must be selected |
-| Category | Must be selected |
-| Estimated Hours | Between 1 and 100 |
-| Confirmation | Must be checked |
-
-### Server-Side Validation
-
-The same validation rules are applied on the server through Express middleware (`middleware/taskValidation.js`). The server:
-
-- Trims all string inputs
-- Rejects missing or invalid fields
-- Rejects past deadlines
-- Rejects hours outside the 1–100 range
-- Rejects unchecked confirmation
-- Never stores invalid data
-- Re-renders the form with errors and preserved values on failure
-
-### Temporary Storage
-
-Task data is stored in a **server-side in-memory array**. Each task includes a unique ID, all form fields, a `completed` status (set to `false`), and a `createdAt` timestamp.
-
-> ⚠️ **Important:** Stored data is erased every time the server restarts. This is temporary storage only. A real database (MongoDB) will be introduced in a later task.
-
-### New Files (Task 2)
-
-| File | Purpose |
-|---|---|
-| `middleware/taskValidation.js` | Server-side validation middleware |
-| `public/js/validation.js` | Client-side validation with live feedback |
-| `views/task-list.ejs` | Task list page with cards and empty state |
-
-## Technologies Used
-
-- **Node.js** – JavaScript runtime
-- **Express.js** – Web framework for Node.js
-- **EJS** – Embedded JavaScript templating engine
-- **CSS** – Custom stylesheet for layout and design
-- **Nodemon** – Development tool for auto-restarting the server
-
-## Folder Structure
+## 📁 Project Structure
 
 ```
 StudyFlow/
+├── controllers/
+│   └── taskController.js       # CRUD logic for API endpoints
+├── data/
+│   └── taskStore.js            # In-memory task storage module
 ├── middleware/
-│   └── taskValidation.js
+│   ├── apiErrorHandler.js      # JSON error handler for /api/* routes
+│   └── taskValidation.js       # Server-side form validation
 ├── public/
 │   ├── css/
-│   │   └── style.css
+│   │   └── style.css           # Custom styles with CSS variables & dark mode
 │   └── js/
-│       └── validation.js
+│       ├── tasks.js            # Task list: fetch, filter, sort, modals, CRUD
+│       ├── theme.js            # Dark/light mode toggle logic
+│       └── validation.js       # Client-side form validation with live feedback
+├── routes/
+│   ├── apiRoutes.js            # Express router for JSON API endpoints
+│   └── pageRoutes.js           # Express router for EJS page routes
 ├── views/
 │   ├── partials/
-│   │   ├── header.ejs
-│   │   └── footer.ejs
-│   ├── index.ejs
-│   ├── add-task.ejs
-│   ├── task-list.ejs
-│   ├── task-success.ejs
-│   ├── about.ejs
-│   ├── 404.ejs
-│   └── error.ejs
-├── app.js
+│   │   ├── header.ejs          # HTML head, navbar, theme script
+│   │   └── footer.ejs          # Footer, Bootstrap JS, theme script
+│   ├── index.ejs               # Homepage with hero & features
+│   ├── add-task.ejs            # Add task form
+│   ├── task-list.ejs           # Task dashboard with cards, modals, filters
+│   ├── task-success.ejs        # Task submission success page
+│   ├── about.ejs               # About page with project journey
+│   ├── api-docs.ejs            # REST API documentation page
+│   ├── 404.ejs                 # Page not found
+│   └── error.ejs               # Server error page
+├── docs/
+│   ├── API_TESTING.md          # API testing guide
+│   ├── PROJECT_REPORT.md       # Internship project report
+│   └── VIDEO_SCRIPT.md         # Demo video script
+├── app.js                      # Express application entry point
 ├── package.json
+├── package-lock.json
 ├── .gitignore
 └── README.md
 ```
 
-## Installation
+---
 
-1. Make sure [Node.js](https://nodejs.org/) is installed on your computer.
+## 🚀 Installation
 
-2. Clone or download this project, then open a terminal inside the `StudyFlow` folder.
+### Prerequisites
 
-3. Install dependencies:
+- [Node.js](https://nodejs.org/) (v16 or later recommended)
 
-   ```bash
-   npm install
-   ```
+### Setup
 
-## Running the Project
+```bash
+git clone https://github.com/chaitanyaverma-blockchain/StudyFlow-Internship.git
+cd StudyFlow-Internship/StudyFlow
+npm install
+```
+
+### Run Commands
+
+**Production mode:**
+
+```bash
+npm start
+```
 
 **Development mode** (auto-restarts on file changes):
 
@@ -148,156 +124,215 @@ StudyFlow/
 npm run dev
 ```
 
-**Production mode**:
+The application will open at:
 
-```bash
-npm start
+```
+http://localhost:3000
 ```
 
-The server will start at **http://localhost:3000**.
+---
 
-## Available Routes
+## 🗺 Application Routes
 
-| Route           | Method | Description                              |
-| --------------- | ------ | ---------------------------------------- |
-| `/`             | GET    | Home page                                |
-| `/tasks/new`    | GET    | Add Task form page                       |
-| `/tasks`        | GET    | View all stored tasks                    |
-| `/tasks`        | POST   | Handles form submission with validation  |
-| `/about`        | GET    | About StudyFlow page                     |
-| Any other route | GET    | Shows 404 Page Not Found                 |
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/` | GET | Homepage with hero section and feature cards |
+| `/tasks/new` | GET | Add Task form with validation |
+| `/tasks` | GET | Task dashboard with search, filters, sorting |
+| `/tasks/success` | GET | Task submission success page |
+| `/about` | GET | About page with project development journey |
+| `/api-docs` | GET | REST API documentation page |
+| `/health` | GET | Health check endpoint (JSON) |
+| `/*` | GET | 404 Page Not Found |
 
-## Testing Checklist
+---
 
-### Task 1 Tests
+## 🔌 REST API Endpoints
 
-- [ ] `npm install` completes without errors
-- [ ] `npm run dev` starts the server on port 3000
-- [ ] Home page loads at `http://localhost:3000/`
-- [ ] Navigation links work correctly
-- [ ] About page loads at `http://localhost:3000/about`
-- [ ] Visiting an invalid URL shows the 404 page
-- [ ] CSS loads and styling appears correctly
-- [ ] Layout is responsive on mobile and desktop
+All API routes are prefixed with `/api` and return JSON responses in the format:
 
-### Task 2 Tests – Valid Cases
+```json
+{
+  "success": true,
+  "message": "Description of result",
+  "data": { ... }
+}
+```
 
-- [ ] Add Task page loads with all fields at `http://localhost:3000/tasks/new`
-- [ ] Submit a completely valid task
-- [ ] Success page displays all submitted data including new fields
-- [ ] Task appears on `/tasks` page
-- [ ] Submit multiple valid tasks
-- [ ] Task count updates on `/tasks` page
+Error responses include an `errors` object for validation failures:
 
-### Task 2 Tests – Invalid Cases
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": {
+    "fieldName": "Error description"
+  }
+}
+```
 
-- [ ] Empty form shows all error messages
-- [ ] Invalid email shows error
-- [ ] Name with numbers shows error
-- [ ] Short task title (less than 3 chars) shows error
-- [ ] Description shorter than 10 characters shows error
-- [ ] Description longer than 500 characters shows error
-- [ ] Past deadline shows error
-- [ ] Missing priority shows error
-- [ ] Missing category shows error
-- [ ] Estimated hours below 1 shows error
-- [ ] Estimated hours above 100 shows error
-- [ ] Unchecked confirmation shows error
-- [ ] Direct POST with invalid data returns errors (server validation)
-- [ ] Previously entered valid values are preserved on validation failure
+### Endpoint Reference
 
-### Task 2 Tests – Interactions
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/tasks` | Retrieve all tasks (supports `?search`, `?priority`, `?status`, `?sort` query params) |
+| `GET` | `/api/tasks/:id` | Retrieve a single task by ID |
+| `POST` | `/api/tasks` | Create a new task |
+| `PUT` | `/api/tasks/:id` | Update an existing task |
+| `DELETE` | `/api/tasks/:id` | Delete a task |
+| `PATCH` | `/api/tasks/:id/status` | Update task completion status |
 
-- [ ] Character counter updates live while typing description
-- [ ] Fields show red border when invalid
-- [ ] Fields show green border when valid
-- [ ] Submit button disables after valid form submission
-- [ ] Reset button asks for confirmation on partially filled form
-- [ ] Task list shows empty state when no tasks exist
-- [ ] Mobile layout works at approximately 375px
+For detailed request/response examples, see the [API Testing Guide](docs/API_TESTING.md) or visit `/api-docs` in the running application.
 
-### Task 3 Tests – Responsive Design & UI
+---
 
-- [ ] Bootstrap 5 is successfully integrated and styles are active
-- [ ] Navbar includes a functioning hamburger menu on mobile (approx. 375px)
-- [ ] Homepage displays Hero, Features, How It Works, and Call-to-action sections
-- [ ] Task list page `/tasks` displays summary cards (Total, High Priority, Upcoming, Completed)
-- [ ] Tasks are displayed in a responsive Bootstrap card grid
-- [ ] Priority badges use the correct colors (High=red, Medium=yellow/orange, Low=green)
-- [ ] Add Task form uses a two-column responsive layout (single column on mobile)
-- [ ] About page displays multiple sections (timeline/cards)
-- [ ] CSS animations (e.g., fade-in, hover effects) are smooth and not distracting
-- [ ] Dark Mode toggle works and saves preference in `localStorage`
-- [ ] Accessibility: Sufficient contrast and `prefers-reduced-motion` support
-- [ ] Previous Task 1 and 2 features (like validation and temporary storage) still function perfectly
+## ✅ Validation Rules
 
-## Internship Task 4 – Objective
+Both client-side and server-side validation enforce identical rules:
 
-Add more advanced form-validation rules, dynamically update the DOM based on user interactions, and implement lightweight client-side routing for a smoother experience without resorting to a full SPA framework.
+| Field | Rules |
+|-------|-------|
+| Student Name | Required, 2–50 characters, letters and spaces only |
+| Email | Required, valid email format, max 100 characters |
+| Task Title | Required, 3–80 characters, cannot be only symbols |
+| Subject | Required, 2–50 characters, letters/numbers/spaces/hyphens only |
+| Description | Required, 10–500 characters |
+| Deadline | Required, cannot be in the past |
+| Priority | Required, must be Low/Medium/High |
+| Category | Required, must be Assignment/Exam Preparation/Project/Revision/Other |
+| Custom Category | Required if category is "Other", 2–30 characters |
+| Estimated Hours | Required, 1–100, max 2 decimal places |
+| Confirmation | Must be checked (checkbox) |
 
-### Task 4 Features
+---
 
-- ✅ **Advanced Validation**: Stricter rules for email, spaces, titles, and decimals.
-- ✅ **Custom Category**: Dynamic field appears when "Other" is selected.
-- ✅ **Dynamic Deadline Status**: Live display of "Due today", "Overdue!", etc.
-- ✅ **Duplicate Checking**: Server-side and client-side warning for identical active tasks.
-- ✅ **Live Search**: Filter task cards by title, subject, student without reloading.
-- ✅ **Dynamic Filters**: Filter by Priority, Deadline status, and Completion state.
-- ✅ **DOM Sorting**: Sort tasks by Date, Deadline, Priority, or Title purely via DOM manipulation.
-- ✅ **Task Details Modal**: Bootstrap modal populated dynamically to view complete task data.
-- ✅ **Completion Toggle**: Non-REST `POST /tasks/:id/toggle` endpoint accessed via `fetch()` to mark tasks completed/pending with visual DOM updates.
-- ✅ **Client-side Routing**: Hash-based routing (`#all`, `#pending`, `#high-priority`) updates active filters automatically.
-- ✅ **User Feedback**: Dynamic empty states and toast notifications on actions.
+## 🌗 Light / Dark Mode
 
-### New Files / Routes (Task 4)
+- Toggle via the 🌙/☀️ button in the navbar
+- Theme is saved in `localStorage` and persists across pages and refreshes
+- Inline `<script>` in `<head>` prevents flash of wrong theme on page load
+- All custom CSS uses CSS variables that swap between light and dark palettes
+- Respects `prefers-reduced-motion` for users who prefer minimal animation
 
-| File / Route | Purpose |
-|---|---|
-| `public/js/tasks.js` | Manages DOM sorting, filtering, modals, and fetch calls |
-| `POST /tasks/:id/toggle` | Server endpoint to toggle completion status temporarily |
+---
 
-## Internship Task 5 – Objective
+## 📱 Responsive Design
 
-Create RESTful API endpoints for CRUD operations and develop a frontend interface that interacts dynamically with the API without requiring a page reload.
+The application is tested and works at:
 
-### Task 5 Features
+| Breakpoint | Device |
+|-----------|--------|
+| 375px | Mobile |
+| 768px | Tablet |
+| 1024px | Laptop |
+| 1440px | Desktop |
 
-- ✅ **REST API Architecture**: Clean separation of `pageRoutes`, `apiRoutes`, `taskController`, and `taskStore`.
-- ✅ **API Endpoints**: 
-  - `GET /api/tasks` (with optional search, sort, filter queries)
-  - `GET /api/tasks/:id`
-  - `POST /api/tasks`
-  - `PUT /api/tasks/:id`
-  - `DELETE /api/tasks/:id`
-  - `PATCH /api/tasks/:id/status`
-- ✅ **JSON Response Format**: Standardized `{ success, message, data, errors }` structure for all API replies.
-- ✅ **Frontend `fetch()` Integration**: The Add Task form and the Task List page are fully powered by asynchronous JS requests.
-- ✅ **CRUD Operations via UI**: Users can Create, Read, Edit (Update), and Delete tasks smoothly via Bootstrap Modals.
-- ✅ **API Documentation Route**: Dedicated `/api-docs` page clearly outlining all endpoints and payload structures.
-- ✅ **Temporary-storage Limitation**: Storage is still in-memory until MongoDB is added in Task 6.
+Key responsive features:
+- Bootstrap 5 collapsible navbar with hamburger menu
+- Card grid adapts from 1 column (mobile) to 3 columns (desktop)
+- Form layout adapts from single column to two-column
+- Modals fit all screen sizes
+- No horizontal overflow at any breakpoint
 
-### New Files / Structure (Task 5)
+---
 
-| File / Folder | Purpose |
-|---|---|
-| `data/taskStore.js` | Isolated module managing the temporary task array |
-| `controllers/taskController.js` | Contains all CRUD logic mapping to endpoints |
-| `routes/apiRoutes.js` | Express router specifically for JSON API endpoints |
-| `routes/pageRoutes.js` | Express router for traditional EJS page navigation |
-| `middleware/apiErrorHandler.js` | Specific handler guaranteeing JSON errors on `/api/*` |
-| `views/api-docs.ejs` | Documentation for the REST API |
+## 🧪 Testing
 
-## Future Development
+### Quick Smoke Test
 
-This project will be extended progressively across the remaining internship tasks:
+1. Start the server: `npm start`
+2. Open `http://localhost:3000` — homepage loads
+3. Navigate to `/tasks/new` — add a task with valid data
+4. Navigate to `/tasks` — verify the task appears
+5. Test search, filters, sort, edit, delete, and status toggle
+6. Toggle dark mode — verify it persists on refresh
+7. Visit `/api-docs` — API documentation loads
+8. Visit `/nonexistent` — 404 page loads
 
-- ~~**Task 1** – HTML structure and basic server interaction~~
-- ~~**Task 2** – Validation, interaction, and temporary storage~~
-- ~~**Task 3** – Advanced CSS styling and responsive design (Bootstrap)~~
-- ~~**Task 4** – Complex form validation and dynamic DOM manipulation~~
-- ~~**Task 5** – API Integration and Front-End Interaction~~
-- **Task 6** – MongoDB integration for persistent data storage
-- **Task 7** – Authentication and deployment
-- **Task 8** – React frontend integration (Optional)
+For comprehensive testing instructions, see the [API Testing Guide](docs/API_TESTING.md).
 
-> **Note:** No database or authentication has been added yet. Task data is stored temporarily in server memory and will be lost on restart. A real database will be introduced in Task 6.
+---
+
+## ⚠️ Temporary Storage Notice
+
+> **Important:** This project uses **in-memory storage**. All task data is lost when the server restarts.
+
+This is intentional for Tasks 1–5 of the internship. The in-memory array in `data/taskStore.js` demonstrates CRUD operations without database complexity. Persistent storage with MongoDB is planned for optional Task 6 and has not been implemented.
+
+This limitation does **not** mean the REST API is broken — it functions correctly for the entire duration of a server session.
+
+---
+
+## 📸 Screenshots
+
+> Screenshots should be placed in a `screenshots/` directory within the project. The following screenshots are recommended:
+
+- [ ] Homepage (light mode)
+- [ ] Homepage (dark mode)
+- [ ] Add Task form
+- [ ] Validation errors on form
+- [ ] Task dashboard with tasks
+- [ ] Search and filter controls
+- [ ] Task details modal
+- [ ] Edit task modal
+- [ ] Delete confirmation modal
+- [ ] API documentation page
+- [ ] API JSON response (browser/Postman)
+- [ ] Mobile view (375px)
+
+*To capture screenshots, run the application locally and use browser developer tools or a screenshot tool.*
+
+---
+
+## 🚢 Deployment
+
+### Deployment Configuration
+
+| Setting | Value |
+|---------|-------|
+| Build command | `npm install` |
+| Start command | `npm start` |
+| Node environment | `production` |
+| Port | Uses `process.env.PORT` (set by hosting platform) |
+
+### Deployment Steps (Render / Railway / similar)
+
+1. Push code to GitHub
+2. Connect your GitHub repository to the hosting platform
+3. Set the root directory to `StudyFlow/` if the repo contains a parent folder
+4. Set build command: `npm install`
+5. Set start command: `npm start`
+6. Deploy
+
+### Post-Deployment Verification
+
+After deployment, verify:
+- Homepage loads with CSS and JavaScript
+- EJS views render correctly
+- API routes return JSON
+- `/health` returns `{ "success": true, "message": "StudyFlow server is running" }`
+- 404 handling works
+
+> **Warning:** In-memory tasks will reset whenever the hosting service restarts or redeploys the application. This is expected behavior for Tasks 1–5.
+
+---
+
+## 🔮 Future Improvements
+
+The following tasks are part of the extended internship roadmap but have **not been implemented**:
+
+- **Task 6** — MongoDB integration for persistent data storage
+- **Task 7** — User authentication and deployment
+- **Task 8** — React frontend integration (Optional)
+
+---
+
+## 👤 Author
+
+**Chaitanya Verma**
+
+---
+
+## 📄 License
+
+ISC

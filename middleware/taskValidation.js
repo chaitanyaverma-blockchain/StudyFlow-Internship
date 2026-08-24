@@ -108,7 +108,7 @@ function validateTask(req, res, next) {
     errors.estimatedHours = 'Must be a valid number.';
   } else if (hours <= 0 || hours > 100) {
     errors.estimatedHours = 'Estimated hours must be between 1 and 100.';
-  } else if (estimatedHours.includes('.') && estimatedHours.split('.')[1].length > 2) {
+  } else if (String(estimatedHours).includes('.') && String(estimatedHours).split('.')[1].length > 2) {
     errors.estimatedHours = 'Maximum two decimal places allowed.';
   }
 

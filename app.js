@@ -5,7 +5,7 @@ const pageRoutes = require('./routes/pageRoutes');
 const apiErrorHandler = require('./middleware/apiErrorHandler');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -19,6 +19,11 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ──── Routes ────
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'StudyFlow server is running' });
+});
 
 // Mount API routes
 app.use('/api', apiRoutes);

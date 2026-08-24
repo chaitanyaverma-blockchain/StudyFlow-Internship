@@ -55,6 +55,38 @@
         </div>
       </div>
 
+      <!-- Endpoint: GET /api/tasks/:id -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <span class="badge bg-success fs-6">GET</span>
+            <h3 class="h5 fw-bold mb-0 text-theme-heading">/api/tasks/:id</h3>
+          </div>
+          <p class="text-theme-secondary mb-0">Retrieve a single task by its ID.</p>
+        </div>
+        <div class="card-body">
+          <h4 class="h6 fw-bold mt-3 mb-2">Success Response (200 OK)</h4>
+          <pre class="bg-dark text-light p-3 rounded small mb-4"><code>{
+  "success": true,
+  "message": "Task retrieved successfully",
+  "data": {
+    "id": 1,
+    "studentName": "Jane Doe",
+    "email": "jane@example.com",
+    "taskTitle": "Math Assignment",
+    "completed": false,
+    ...
+  }
+}</code></pre>
+
+          <h4 class="h6 fw-bold mb-2 text-danger">Error Response (404 Not Found)</h4>
+          <pre class="bg-dark text-light p-3 rounded small"><code>{
+  "success": false,
+  "message": "Task not found"
+}</code></pre>
+        </div>
+      </div>
+
       <!-- Endpoint: POST /api/tasks -->
       <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0">
